@@ -1,13 +1,19 @@
 import React from 'react';
 import { MdOutlineCancel } from 'react-icons/md';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import { Button } from '.';
 import { userProfileData } from '../data/dummy';
 import { useStateContext } from '../contexts/ContextProvider';
 import avatar from '../data/avatar.jpg';
+import { login } from '../store';
 
 const UserProfile = () => {
   const { currentColor } = useStateContext();
+  const dispatch = useDispatch();
+
+  const user = useSelector(state => state.auth.user);
+  console.log(user);
 
   return (
     <div className="nav-item absolute right-1 top-16 bg-white dark:bg-[#42464D] p-8 rounded-lg w-96">
@@ -40,6 +46,7 @@ const UserProfile = () => {
               type="button"
               style={{ color: item.iconColor, backgroundColor: item.iconBg }}
               className=" text-xl rounded-lg p-3 hover:bg-light-gray"
+              onClick={() => { dispatch(login({ username: "test", password: "test2" })) }}
             >
               {item.icon}
             </button>

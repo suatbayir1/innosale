@@ -16,11 +16,15 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",
+    "react-redux": "^8.0.4",
     "react-router-dom": "^6.2.1",
-    "react-scripts": "5.0.0"
+    "react-scripts": "5.0.0",
+    "redux": "^4.2.0",
+    "redux-thunk": "^2.4.1",
+    "three": "^0.145.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node --max_old_space_size=4096 node_modules/.bin/react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
