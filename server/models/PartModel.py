@@ -13,14 +13,15 @@ class PartModel():
             os.environ.get('DATABASE_PASSWORD'), 
             os.environ.get('DATABASE_NAME')
             )
+        self.table_name = "parts"
     
     def add(self, part):
         try: 
             result = self.mysql.insert(
-                table_name = "parca_listesi",
+                table_name = self.table_name,
                 columns = """
-                    teklif_id, teklif_no, talep_rev_no, sac_kalinlik, sac_cinsi, 
-                    net_x, net_y, net_xy_div, kontur_boyu, acinim_yuzey_alani, 
+                    teklif_id, teklif_no, teklif_talep_rev_no, sac_kalinlik, sac_cinsi, 
+                    net_x, net_y, net_xy_division, kontur_boyu, acinim_yuzey_alani, 
                     sac_ts_max, sac_uzama, sertlik, hazirlanma_tarihi, tonaj
                 """,
                 column_types = "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s",

@@ -28,9 +28,9 @@ tables = [
             CREATE TABLE IF NOT EXISTS operations (
                 id int not null primary key auto_increment,
                 parca_no varchar(255),
-                teklif_talep_rev_no int,
+                teklif_no varchar(50),
                 teklif_id int,
-                talep_rev_no int,
+                teklif_talep_rev_no int,
                 teklif_parca_rev_no int,
                 operasyon_no int,
                 operasyon_adi varchar(255),
@@ -50,7 +50,7 @@ tables = [
                 model_mly int,
                 CAD int,
                 CAM int,
-                2D int,
+                TwoD int,
                 BCNC int,
                 KCNC int,
                 GCNC int,
@@ -64,3 +64,5 @@ tables = [
         """
     }
 ]
+
+excel_files = ["ParcaListesi.xlsx", "Operasyonlar.xlsx"]

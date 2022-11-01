@@ -10,6 +10,7 @@ from middlewares.Base import Base
 
 # Controllers
 from controllers.PartController import PartController
+from controllers.OperationController import OperationController
 
 # Configuration
 load_dotenv()
@@ -20,7 +21,6 @@ class Api(FlaskView, Base):
 
     @route("/test", methods = ["GET"])
     def test(self):
-        print(os.environ.get('TEST'))
         result = self.base.response(message = "Server is running")
         return result
 
@@ -30,4 +30,5 @@ if __name__ == "__main__":
     CORS(app, supports_credentials = True)
     Api.register(app, route_base = '/api/v1')
     PartController.register(app, route_base = '/api/v1/part')
+    OperationController.register(app, route_base = '/api/v1/operation')
     app.run(debug = True, port = 5000)
