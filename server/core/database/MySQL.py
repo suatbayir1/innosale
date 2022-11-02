@@ -34,3 +34,12 @@ class MySQL():
             return ["Record successfully added", 200] if self.cursor.rowcount > 0 else ["An error occurred while inserting a new record", 500]
         except Exception as e:
             return [e, 500]
+    
+    def update(self, table_name, columns, where, val):
+        try:
+            sql = f"UPDATE {table_name} SET {columns} WHERE {where} = %s"
+            self.cursor.execute(sql, val)
+            self.db.commit()
+            return ["Record successfully updated", 200]
+        except Exception as e:
+            return [e, 500]

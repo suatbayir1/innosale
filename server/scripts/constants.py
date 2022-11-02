@@ -18,7 +18,8 @@ tables = [
                 sac_uzama int,
                 sertlik varchar(50),
                 hazirlanma_tarihi date,
-                tonaj float
+                tonaj float,
+                model_path varchar(255) default ''
                 )
         """
     },

@@ -46,7 +46,23 @@ class PartController(FlaskView, Base):
             result = self.part_model.add(part)
 
             return self.base.response(message = str(result[0])), result[1]
-        except:
-            return self.base.response(message = "Error"), 500
+        except Exception as e:
+            return self.base.response(message = e), 500
+        finally:
+            pass
+    
+    @route("/update", methods = ["POST", "PUT"])
+    def update(self):
+        try:
+            confirm, message = self.base.request_validation(request.json, required_keys.part["update"])
+
+            if not confirm:
+                return self.base.response(message = message)
+
+            result = self.part_model.update(request.json)
+
+            return self.base.response(message = str(result[0])), result[1]
+        except Exception as e:
+            return self.base.response(message = e), 500
         finally:
             pass

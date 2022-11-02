@@ -1,6 +1,6 @@
 # Libraries
 import sys
-import os
+import os, rarfile
 import pandas as pd
 import requests
 import json
@@ -104,7 +104,33 @@ class Setup():
 
             response = requests.post(f"{os.environ.get('BACKEND_URL')}/operation/add", json = payload)
 
+    def save_part_model(self):
+        print("3D Models saving")
+        try:
+            for rar in os.listdir(os.environ.get('SOURCE_IGS_PATH')):
+                filepath = os.path.join(os.environ.get('SOURCE_IGS_PATH'), rar)
+                opened_rar = rarfile.RarFile(filepath)
+                for f in opened_rar.infolist():
+                    extracted_file_name = f.filename
+                opened_rar.extractall(os.environ.get('TARGET_IGS_PATH'))
+
+                # save path to part
+                payload = {
+                    "attributes": {
+                        "model_path": f"{os.environ.get('TARGET_IGS_PATH')}/{extracted_file_name}",
+                    },
+                    "where":{
+                        "teklif_id": int(rar.split(".")[0].split("_")[3])
+                    }
+                }
+
+                response = requests.post(f"{os.environ.get('BACKEND_URL')}/part/update", json = payload)
+        except Exception as e: 
+            print(e)
+
+
 if __name__ == "__main__":
     setup = Setup()
     setup.create_tables()
     setup.read_excel_and_write_to_db()
+    setup.save_part_model()

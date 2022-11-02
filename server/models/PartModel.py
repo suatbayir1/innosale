@@ -33,4 +33,28 @@ class PartModel():
 
             return result
         except Exception as e:
-            return [e, code]
+            return [e, 500]
+    
+    def update(self, params):
+        try:
+            columns = ""
+            val = []
+            where = ""
+            for key, value in params["attributes"].items():
+                columns += f"{key} = %s, "
+                val.append(value)
+
+            for key, value in params["where"].items():
+                where = key
+                val.append(value)
+
+            result = self.mysql.update(
+                table_name = self.table_name,
+                columns = columns[:-2],
+                where = where,
+                val = val
+            )
+
+            return result
+        except Exception as e:
+            return [e, 500]
