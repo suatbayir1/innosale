@@ -553,6 +553,10 @@ export const links = [
     title: 'Apps',
     links: [
       {
+        name: 'nlp',
+        icon: <AiOutlineCalendar />,
+      },
+      {
         name: 'calendar',
         icon: <AiOutlineCalendar />,
       },
