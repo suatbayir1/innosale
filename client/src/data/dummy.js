@@ -9,7 +9,7 @@ import { MdOutlineSupervisorAccount } from 'react-icons/md';
 import { HiOutlineRefresh } from 'react-icons/hi';
 import { TiTick } from 'react-icons/ti';
 import { GiLouvrePyramid } from 'react-icons/gi';
-import { GrLocation } from 'react-icons/gr';
+import { GrLocation, GrProductHunt } from 'react-icons/gr';
 import avatar from './avatar.jpg';
 import avatar2 from './avatar2.jpg';
 import avatar3 from './avatar3.png';
@@ -21,7 +21,6 @@ import product4 from './product4.jpg';
 import product5 from './product5.jpg';
 import product6 from './product6.jpg';
 import product7 from './product7.jpg';
-import product8 from './product8.jpg';
 
 export const gridOrderImage = (props) => (
   <div>
@@ -448,6 +447,18 @@ export const customersGrid = [
     width: '150',
     textAlign: 'Center'
   },
+  {
+    field: 'Location',
+    headerText: 'Location',
+    width: '150',
+    textAlign: 'Center'
+  },
+  {
+    field: 'Location',
+    headerText: 'Location',
+    width: '150',
+    textAlign: 'Center'
+  },
 
   {
     field: 'CustomerID',
@@ -456,7 +467,6 @@ export const customersGrid = [
     textAlign: 'Center',
     isPrimaryKey: true,
   },
-
 ];
 
 export const employeesGrid = [
@@ -532,6 +542,10 @@ export const links = [
       {
         name: 'customers',
         icon: <RiContactsLine />,
+      },
+      {
+        name: 'parts',
+        icon: <GrProductHunt />,
       },
     ],
   },
@@ -5922,3 +5936,134 @@ export const PyramidData = [
   { x: 'Fruits', y: 520, text: '520 cal' },
   { x: 'Bread, Rice, Pasta', y: 930, text: '930 cal' },
 ];
+
+
+// NEW
+export const partsGrid = [
+  { type: 'checkbox', width: '50' },
+  {
+    headerText: 'Id',
+    width: '70',
+    textAlign: 'Center',
+    field: 'id',
+    isPrimaryKey: true,
+  },
+  {
+    field: 'teklif_id',
+    headerText: 'Teklif Id',
+    width: '100',
+    textAlign: 'Center'
+  },
+  {
+    field: 'teklif_no',
+    headerText: 'Teklif No',
+    width: '140',
+    textAlign: 'Center',
+  },
+  {
+    field: 'teklif_talep_rev_no',
+    headerText: 'Teklif Talep Rev No',
+    width: '160',
+    textAlign: 'Center',
+  },
+  {
+    field: 'sac_kalinlik',
+    headerText: 'Sac Kalınlık',
+    width: '120',
+    textAlign: 'Center',
+  },
+  {
+    field: 'sac_cinsi',
+    headerText: 'Sac Cinsi',
+    width: '120',
+    textAlign: 'Center',
+  },
+  {
+    field: 'net_x',
+    headerText: 'Net X',
+    width: '120',
+    textAlign: 'Center',
+  },
+  {
+    field: 'net_y',
+    headerText: 'Net Y',
+    width: '120',
+    textAlign: 'Center',
+  },
+  {
+    field: 'net_xy_division',
+    headerText: 'Net XY Division',
+    width: '140',
+    textAlign: 'Center',
+  },
+  {
+    field: 'kontur_boyu',
+    headerText: 'Kontur Boyu',
+    width: '140',
+    textAlign: 'Center',
+  },
+  {
+    field: 'acinim_yuzey_alani',
+    headerText: 'Açınım Yüzey Alanı',
+    width: '180',
+    textAlign: 'Center',
+  },
+  {
+    field: 'sac_ts_max',
+    headerText: 'Sac Ts Max',
+    width: '120',
+    textAlign: 'Center',
+  },
+  {
+    field: 'sac_uzama',
+    headerText: 'Sac Uzama',
+    width: '120',
+    textAlign: 'Center',
+  },
+  {
+    field: 'sertlik',
+    headerText: 'Sertlik',
+    width: '120',
+    textAlign: 'Center',
+  },
+  {
+    field: 'hazirlanma_tarihi',
+    headerText: 'Hazırlanma Tarihi',
+    width: '160',
+    textAlign: 'Center',
+  },
+  {
+    field: 'tonaj',
+    headerText: 'Tonaj',
+    width: '100',
+    textAlign: 'Center',
+  },
+  {
+    field: 'model_path',
+    headerText: 'Model Path',
+    width: '160',
+    textAlign: 'Center',
+  }
+];
+
+export const partsData = [
+  {
+    id: 1,
+    teklif_id: 58,
+    teklif_no: "001-2020",
+    teklif_talep_rev_no: 0,
+    sac_kalinlik: 1,
+    sac_cinsi: "XES",
+    net_x: 181,
+    net_y: 163,
+    net_xy_division: 1.11043,
+    kontur_boyu: 648,
+    acinim_yuzey_alani: 26918,
+    sac_ts_max: 350,
+    sac_uzama: 37,
+    sertlik: "YUMUŞAK",
+    hazirlanma_tarihi: "2020-01-16",
+    tonaj: 226800,
+    model_path: "/home/suat/Desktop/backup/innosale/server/static/igs/001_2020_Teklifid_58.igs"
+  }
+]

@@ -11,7 +11,7 @@ import { Navbar, Footer, Sidebar, ThemeSettings } from './components';
 import {
   PartModel, Ecommerce, Orders, Calendar, Employees, Stacked, Pyramid,
   Customers, Kanban, Line, Area, Bar, Pie, Financial, ColorPicker,
-  ColorMapping, Editor,
+  ColorMapping, Editor, Parts
 } from './pages';
 
 // CSS
@@ -84,6 +84,7 @@ const App = () => {
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/employees" element={<Employees />} />
                 <Route path="/customers" element={<Customers />} />
+                <Route path="/parts" element={<Parts />} />
 
                 {/* apps  */}
                 <Route path="/kanban" element={<Kanban />} />

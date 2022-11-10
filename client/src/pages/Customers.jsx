@@ -16,7 +16,7 @@ const Customers = () => {
         dataSource={customersData}
         enableHover={false}
         allowPaging
-        pageSettings={{ pageCount: 5 }}
+        pageSettings={{ pageCount: 10 }}
         selectionSettings={selectionsettings}
         toolbar={toolbarOptions}
         editSettings={editing}

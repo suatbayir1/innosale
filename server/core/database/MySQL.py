@@ -43,3 +43,21 @@ class MySQL():
             return ["Record successfully updated", 200]
         except Exception as e:
             return [e, 500]
+    
+    def select_all_skip_limit(self, table_name, skip, limit):
+        try:
+            # find matched rows
+            # sql = f"SELECT SQL_CALC_FOUND_ROWS * FROM {table_name} LIMIT {limit} OFFSET {skip}"
+            sql = f"SELECT SQL_CALC_FOUND_ROWS * FROM {table_name}"
+            self.cursor.execute(sql)
+            fields = [field[0] for field in self.cursor.description]
+            result = [dict(zip(fields, row)) for row in self.cursor.fetchall()]
+
+            # calculate matched number of rows
+            sql_total_count = "SELECT FOUND_ROWS() AS total"
+            self.cursor.execute(sql_total_count)
+            total_count = self.cursor.fetchall()
+
+            return [result, total_count[0][0]]
+        except Exception as e:
+            return [e, 500]

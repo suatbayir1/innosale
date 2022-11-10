@@ -1,12 +1,26 @@
 # Libraries
 from flask import jsonify
 from functools import wraps
+import os
+
+# Core
+from core.database.MySQL import MySQL
 
 class Base():
-    def response(self, data = [], message = "Default Message"):
+    def __init__(self):
+        self.mysql = MySQL(
+            os.environ.get('DATABASE_HOST'), 
+            os.environ.get('DATABASE_USER'), 
+            os.environ.get('DATABASE_PASSWORD'), 
+            os.environ.get('DATABASE_NAME')
+            )
+        self.table_name = "parts"
+
+    def response(self, data = [], message = "Default Message", total_count = 0):
         return jsonify(
             data = data,
-            message = message
+            message = message,
+            total_count = total_count
         )
 
     def request_validation(self, payload, required_keys):

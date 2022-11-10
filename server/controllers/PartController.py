@@ -66,3 +66,16 @@ class PartController(FlaskView, Base):
             return self.base.response(message = e), 500
         finally:
             pass
+
+    @route("/getAll", methods = ["GET"])
+    def get_all(self):
+        try:
+            skip = request.args.get('skip') if request.args.get('skip') else 0
+            limit = request.args.get('limit') if request.args.get('limit') else 10
+
+            result = self.part_model.get_all(skip, limit)
+            return self.base.response(data = result[0], total_count = result[1], message = "get all"), 200
+        except Exception as e:
+            return self.base.response(message = e), 500
+        finally:
+            pass

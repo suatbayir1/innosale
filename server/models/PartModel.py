@@ -2,10 +2,13 @@
 from entities.Part import Part
 import os
 
+# Middlewares
+from middlewares.Base import Base
+
 # Core
 from core.database.MySQL import MySQL
 
-class PartModel():
+class PartModel(Base):
     def __init__(self):
         self.mysql = MySQL(
             os.environ.get('DATABASE_HOST'), 
@@ -13,6 +16,7 @@ class PartModel():
             os.environ.get('DATABASE_PASSWORD'), 
             os.environ.get('DATABASE_NAME')
             )
+        self.base = Base()
         self.table_name = "parts"
     
     def add(self, part):
@@ -56,5 +60,15 @@ class PartModel():
             )
 
             return result
+        except Exception as e:
+            return [e, 500]
+
+    def get_all(self, skip: int, limit: int):
+        try:
+            return self.base.mysql.select_all_skip_limit(
+                table_name = self.table_name, 
+                skip = skip,
+                limit = limit
+            )
         except Exception as e:
             return [e, 500]

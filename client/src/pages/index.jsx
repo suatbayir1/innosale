@@ -15,3 +15,4 @@ export { default as Pie } from './Charts/Pie';
 export { default as Pyramid } from './Charts/Pyramid';
 export { default as Stacked } from './Charts/Stacked';
 export { default as PartModel } from '../parts/containers/PartModel';
+export { default as Parts } from '../parts/containers/Parts';
