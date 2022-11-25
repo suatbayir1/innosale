@@ -21,6 +21,7 @@ class PartModel(Base):
     
     def add(self, part):
         try: 
+            print("model", part.teklif_id)
             result = self.mysql.insert(
                 table_name = self.table_name,
                 columns = """

@@ -2,9 +2,9 @@
 import React, { Component } from 'react';
 import {
     GridComponent, ColumnsDirective, ColumnDirective, Page, Selection,
-    Inject, Edit, Toolbar, Sort, Filter
+    Inject, Edit, Toolbar, Sort, Filter,
 } from '@syncfusion/ej2-react-grids';
-import { DataManager, UrlAdaptor, ODataAdaptor } from '@syncfusion/ej2-data';
+import { Ajax } from '@syncfusion/ej2-base';
 import { connect } from "react-redux";
 
 // Helpers
@@ -30,6 +30,7 @@ class Parts extends Component {
                 allowAdding: true,
                 // showDeleteConfirmDialog: true
             },
+            data: []
         }
     }
 
@@ -37,46 +38,34 @@ class Parts extends Component {
         this.props.getParts();
     }
 
-    actionBegin = (args) => {
-        console.log({ args });
-    }
-
-    actionComplete(args) {
-        if (args.requestType === "delete") {
-            console.log("complete", args);
-            console.log(this.grid.getSelectedRecords());
-            console.log(args.data);
-        }
+    dataSourceChanged = (args) => {
+        console.log(args);
     }
 
     render() {
         const { toolbarOptions, editing } = this.state;
         const { parts, parts_total_count } = this.props;
+        console.log(parts);
 
         return (
             <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
                 <Header category="Page" title="Parts" />
                 <GridComponent
                     ref={g => this.grid = g}
-                    dataSource={parts}
+                    dataSource={parts?.result}
                     enableHover={true}
                     allowPaging
                     pageSettings={{
                         pageSize: 10,
-                        pageSizes: true,
-                        totalRecordsCount: parts_total_count,
-                        pageCount: 10,
+
                     }}
                     selectionSettings={{ persistSelection: true, type: 'Single' }}
                     toolbar={toolbarOptions}
                     editSettings={editing}
                     allowSorting
                     loadingIndicator={{ indicatorType: 'Shimmer' }}
-                    // actionBegin={this.actionBegin}
-                    actionComplete={this.actionComplete.bind(this)}
-                    actionFailure={(e) => {
-                        console.log(e)
-                    }}
+                    actionComplete={this.actionComplete}
+                    dataSourceChanged={this.dataSourceChanged}
                 >
                     <ColumnsDirective>
                         {partsGrid.map((item, index) => <ColumnDirective key={index} {...item} />)}

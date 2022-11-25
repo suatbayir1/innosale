@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { FiSettings } from 'react-icons/fi';
 import { TooltipComponent } from '@syncfusion/ej2-react-popups';
+import { NotificationContainer } from 'react-notifications';
 
 // Components
 import { Navbar, Footer, Sidebar, ThemeSettings } from './components';
@@ -11,8 +12,9 @@ import { Navbar, Footer, Sidebar, ThemeSettings } from './components';
 import {
   PartModel, Ecommerce, Orders, Calendar, Employees, Stacked, Pyramid,
   Customers, Kanban, Line, Area, Bar, Pie, Financial, ColorPicker,
-  ColorMapping, Editor, Parts
+  ColorMapping, Editor, Parts, NLP
 } from './pages';
+import OverlayContainer from './shared/containers/OverlayContainer';
 
 // CSS
 import './App.css';
@@ -35,6 +37,9 @@ const App = () => {
 
   return (
     <div className={currentMode === 'Dark' ? 'dark' : ''}>
+      <OverlayContainer />
+      <NotificationContainer />
+
       <BrowserRouter>
         <div className="flex relative dark:bg-main-dark-bg">
           <div className="fixed right-4 bottom-4" style={{ zIndex: '1000' }}>
@@ -87,6 +92,7 @@ const App = () => {
                 <Route path="/parts" element={<Parts />} />
 
                 {/* apps  */}
+                <Route path="/nlp" element={<NLP />} />
                 <Route path="/kanban" element={<Kanban />} />
                 <Route path="/editor" element={<Editor />} />
                 <Route path="/calendar" element={<Calendar />} />

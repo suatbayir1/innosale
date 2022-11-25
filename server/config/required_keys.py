@@ -11,3 +11,11 @@ operation = dict(
         "CAM", "TwoD", "BCNC", "KCNC", "GCNC", "MONTAJ", "DNM", "OLCUM", "iscilik_mly", "iscilik_saat", "toplam_mly"
     ]
 )
+
+transcribe_results = dict(
+    add = [
+        "hash", "sound_len", "tiny_time", "tiny_result",
+        "base_time", "base_result", "small_time", "small_result",
+        "medium_time", "medium_result", "large_time", "large_result"
+    ]
+)

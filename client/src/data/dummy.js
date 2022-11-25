@@ -141,6 +141,10 @@ const customerGridImage = (props) => (
   </div>
 );
 
+const editTemplate = (args) => {
+  return (<input type="file" />);
+}
+
 const customerGridStatus = (props) => (
   <div className="flex gap-2 justify-center items-center text-gray-700 capitalize">
     <p style={{ background: props.StatusBg }} className="rounded-full h-3 w-3" />
@@ -410,6 +414,7 @@ export const customersGrid = [
     headerText: 'Name',
     width: '150',
     template: customerGridImage,
+    editTemplate: editTemplate,
     textAlign: 'Center'
   },
   {
@@ -6050,24 +6055,19 @@ export const partsGrid = [
   }
 ];
 
-export const partsData = [
+export const nlpGrid = [
+  { type: 'checkbox', width: '50' },
   {
-    id: 1,
-    teklif_id: 58,
-    teklif_no: "001-2020",
-    teklif_talep_rev_no: 0,
-    sac_kalinlik: 1,
-    sac_cinsi: "XES",
-    net_x: 181,
-    net_y: 163,
-    net_xy_division: 1.11043,
-    kontur_boyu: 648,
-    acinim_yuzey_alani: 26918,
-    sac_ts_max: 350,
-    sac_uzama: 37,
-    sertlik: "YUMUŞAK",
-    hazirlanma_tarihi: "2020-01-16",
-    tonaj: 226800,
-    model_path: "/home/suat/Desktop/backup/innosale/server/static/igs/001_2020_Teklifid_58.igs"
+    headerText: 'Name',
+    width: '150',
+    template: customerGridImage,
+    editTemplate: editTemplate,
+    textAlign: 'Center'
+  },
+  {
+    field: 'ProjectName',
+    headerText: 'Project Name',
+    width: '150',
+    textAlign: 'Center'
   }
-]
+];

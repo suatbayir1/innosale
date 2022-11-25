@@ -19,18 +19,16 @@ export const getParts = () => {
         axios
             .get(url)
             .then(response => {
-                console.log(response)
                 if (response.status === 200) {
+                    console.log(typeof response.data.total_count)
                     dispatch(setParts({
-                        data: response.data.data,
-                        total_count: response.data.total_count
+                        result: response.data.data,
+                        count: response.data.total_count
                     }));
                 }
             })
             .catch(err => {
                 console.log(err);
-                // dispatch(getAllDTs([]));
-                // NotificationManager.error(err.response.data.message, 'Error', 3000);
             })
     }
 }

@@ -63,7 +63,40 @@ tables = [
                 toplam_mly int
             )
         """
+    },
+    {
+        "name": "transcribe_results",
+        "sql": """
+            CREATE TABLE IF NOT EXISTS transcribe_results (
+                hash varchar(64) not null primary key,
+                sound_len int not null,
+                tiny_time int,
+                tiny_result MEDIUMTEXT,
+                base_time int,
+                base_result MEDIUMTEXT,
+                small_time int,
+                small_result MEDIUMTEXT,
+                medium_time int,
+                medium_result MEDIUMTEXT,
+                large_time int,
+                large_result MEDIUMTEXT
+            )
+        """
+    },
+        {
+        "name": "audios",
+        "sql": """
+            CREATE TABLE IF NOT EXISTS audios (
+                id int not null primary key auto_increment,
+                filename varchar(255),
+                path varchar(255),
+                model varchar(50),
+                createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updatedAt DATETIME ON UPDATE CURRENT_TIMESTAMP
+            )
+        """
     }
+    
 ]
 
-excel_files = ["ParcaListesi.xlsx", "Operasyonlar.xlsx"]
+excel_files = ["ParcaListesi.xlsx", "Operasyonlar.xlsx", "TranscribeResults.xlsx"]

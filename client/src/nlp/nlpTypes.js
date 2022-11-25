@@ -1,0 +1,4 @@
+export const UPLOAD_AUDIO_FILE = "UPLOAD_AUDIO_FILE";
+export const GET_ALL_AUDIOS = "GET_ALL_AUIDOS";
+export const SET_AUDIOS = "SET_AUDIOS";
+export const DELETE_AUDIO_FILE = "DELETE_AUDIO_FILE";

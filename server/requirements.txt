@@ -5,3 +5,4 @@ Flask-Cors==3.0.9
 mysql-connector-python==8.0.31
 rarfile==4.0
 werkzeug==2.1.2
+openpyxl

@@ -22,6 +22,7 @@ class PartController(FlaskView, Base):
     @route("/add", methods = ["POST"])
     def add(self):
         try:
+            print(request.json)
             confirm, message = self.base.request_validation(request.json, required_keys.part["add"])
 
             if not confirm:

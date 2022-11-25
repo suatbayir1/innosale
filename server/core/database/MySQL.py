@@ -1,5 +1,6 @@
 # Libraries
 import mysql.connector
+import pandas as pd
 
 class MySQL():
     def __init__(self, host, user, password, database):
@@ -59,5 +60,29 @@ class MySQL():
             total_count = self.cursor.fetchall()
 
             return [result, total_count[0][0]]
+        except Exception as e:
+            return [e, 500]
+    
+    def select_as_dataframe(self, table_name, column_list, hash):
+        columns = ""
+        for i, column in enumerate(column_list):
+            columns += column
+            if i + 1 < len(column_list): columns += ", "
+        
+        query = f"SELECT {columns} FROM {table_name}"
+        if hash is not None: query += f" WHERE hash={hash}"
+        
+        try:
+            result_dataframe = pd.read_sql(query, self.db)
+            return result_dataframe
+        except:
+            return pd.DataFrame()
+
+    def delete(self, table_name, where, val):
+        try:
+            sql = f"DELETE FROM {table_name} WHERE {where} = %s"
+            self.cursor.execute(sql, val)
+            self.db.commit()
+            return ["Record successfully deleted", 200] if self.cursor.rowcount > 0 else ["An error occurred while deleting a record", 500]
         except Exception as e:
             return [e, 500]

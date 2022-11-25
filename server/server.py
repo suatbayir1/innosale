@@ -11,6 +11,8 @@ from middlewares.Base import Base
 # Controllers
 from controllers.PartController import PartController
 from controllers.OperationController import OperationController
+from controllers.WhisperController import WhisperController
+from controllers.Similarity3DController import Similarity3DController
 
 # Configuration
 load_dotenv()
@@ -31,4 +33,6 @@ if __name__ == "__main__":
     Api.register(app, route_base = '/api/v1')
     PartController.register(app, route_base = '/api/v1/part')
     OperationController.register(app, route_base = '/api/v1/operation')
-    app.run(debug = True, port = 5000)
+    WhisperController.register(app, route_base = '/api/v1/whisper')
+    Similarity3DController.register(app, route_base = '/api/v1/similarity')
+    app.run(debug = True, port = 5000, use_reloader = True)

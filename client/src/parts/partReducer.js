@@ -2,8 +2,7 @@
 import { GET_PARTS } from "./partTypes";
 
 const initialState = {
-    parts: {},
-    parts_total_count: 0
+    parts: [],
 }
 
 const partReducer = (state = initialState, action) => {
@@ -11,8 +10,7 @@ const partReducer = (state = initialState, action) => {
         case GET_PARTS:
             return {
                 ...state,
-                parts: action.payload.data,
-                parts_total_count: action.payload.parts_total_count
+                parts: action.payload
             }
         default:
             return state;

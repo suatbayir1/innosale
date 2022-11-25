@@ -4,7 +4,7 @@ import os, rarfile
 import pandas as pd
 import requests
 import json
-sys.path.insert(1, '/home/suat/Desktop/backup/innosale/server')
+sys.path.insert(1, '/root/innosale/server')
 from dotenv import load_dotenv
 
 # Core
@@ -23,6 +23,12 @@ class Setup():
         self.DATABASE_PASSWORD = os.environ.get('DATABASE_PASSWORD')
         self.DATABASE_NAME = os.environ.get('DATABASE_NAME')
         self.mysql = MySQL(self.DATABASE_HOST, self.DATABASE_USER, self.DATABASE_PASSWORD, self.DATABASE_NAME)
+
+    def drop_tables(self):
+        print("Dropping Tables: ")
+        for table in constants.tables:
+            result = self.mysql.execute(f"DROP TABLE IF EXISTS {table['name']}")
+            print(f'drop table {table["name"]} : {result}')
     
     def create_tables(self):
         print("Creating Tables: ")
@@ -39,6 +45,8 @@ class Setup():
                 self.insert_parts(df)
             elif filename == "Operasyonlar.xlsx":
                 self.insert_operations(df)
+            elif filename == "TranscribeResults.xlsx":
+                self.insert_transcribe_results(df)
 
     def insert_parts(self, df):
         print("Part inserting...")
@@ -103,6 +111,26 @@ class Setup():
             }
 
             response = requests.post(f"{os.environ.get('BACKEND_URL')}/operation/add", json = payload)
+        
+    def insert_transcribe_results(self, df):
+        print("Transcribe Results Inserting...")
+        df.fillna(0, inplace = True)
+        for index, row in df.iterrows():
+            payload = {
+                "hash": row.loc['hash'],
+                "sound_len": row.loc['sound_len'],
+                "tiny_time": row.loc['tiny_time'],
+                "tiny_result": row.loc['tiny_result'],
+                "base_time": row.loc['base_time'],
+                "base_result": row.loc['base_result'],
+                "small_time": row.loc['small_time'],
+                "small_result": row.loc['small_result'],
+                "medium_time": row.loc['medium_time'],
+                "medium_result": row.loc['medium_result'],
+                "large_time": row.loc['large_time'],
+                "large_result": row.loc['large_result']
+            }
+            response = requests.post(f"{os.environ.get('BACKEND_URL')}/whisper/add", json = payload)
 
     def save_part_model(self):
         print("3D Models saving")
@@ -131,6 +159,7 @@ class Setup():
 
 if __name__ == "__main__":
     setup = Setup()
+    setup.drop_tables()
     setup.create_tables()
     setup.read_excel_and_write_to_db()
     setup.save_part_model()
