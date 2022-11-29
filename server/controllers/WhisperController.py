@@ -207,9 +207,15 @@ class WhisperController(FlaskView, Base):
     @route("/deleteAudio/<id>", methods = ["DELETE"])
     def deleteAudio(self, id):
         try:
+            audio = self.whisper_model.get_audio_by_id(id)
+            if audio[1] != 200:
+                return self.base.response(message = "No record found for the that id"), 404
+
             result = self.whisper_model.delete_audio_file(id)
 
-            print(result)
+            if result[1] == 200:
+                if os.path.isfile(audio[0]["path"]):
+                    os.remove(audio[0]["path"])
 
             return self.base.response(message = str(result[0])), result[1]
         except Exception as e:

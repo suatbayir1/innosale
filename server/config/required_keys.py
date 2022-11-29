@@ -19,3 +19,7 @@ transcribe_results = dict(
         "medium_time", "medium_result", "large_time", "large_result"
     ]
 )
+
+nlp = dict(
+    update = [],
+)

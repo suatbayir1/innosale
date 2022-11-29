@@ -8,7 +8,8 @@ class MySQL():
             host = host,
             user = user,
             password = password,
-            database = database
+            database = database,
+            autocommit = True
         )
         self.cursor = self.db.cursor()
 
@@ -86,3 +87,17 @@ class MySQL():
             return ["Record successfully deleted", 200] if self.cursor.rowcount > 0 else ["An error occurred while deleting a record", 500]
         except Exception as e:
             return [e, 500]
+
+    def select_by_id(self, table_name, id):
+        try:
+            # find matched rows
+            sql = f"SELECT * FROM {table_name} WHERE id = %s"
+            self.cursor.execute(sql, id)
+            print("desc", self.cursor.description)
+            fields = [field[0] for field in self.cursor.description]
+            result = [dict(zip(fields, row)) for row in self.cursor.fetchall()]
+            print(result)
+            return result[0], 200
+        except Exception as e:
+            return [e, 500]
+    

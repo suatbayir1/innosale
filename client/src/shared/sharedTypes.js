@@ -1,1 +1,2 @@
 export const SET_OVERLAY = "SET_OVERLAY";
+export const SET_DIALOG_DATA = "SET_DIALOG_DATA";

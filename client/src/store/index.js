@@ -7,11 +7,14 @@ export {
 } from "../parts/partActions";
 
 export {
-    setOverlay
+    setOverlay,
+    setDialogData,
 } from "../shared/sharedActions";
 
 export {
     getAllAudios,
     uploadAudioFile,
     deleteAudioFile,
+    setUploadAudioLoading,
+    updateAudio,
 } from "../nlp/nlpActions";

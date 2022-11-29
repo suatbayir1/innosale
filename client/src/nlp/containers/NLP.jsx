@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import Box from '@mui/material/Box';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarExport, GridToolbarColumnsButton, GridDensity, GridToolbarFilterButton } from '@mui/x-data-grid';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -10,12 +10,13 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
+import DownloadIcon from '@mui/icons-material/Download';
 
 // Components
 import { Header } from '../../components';
 
 // Actions
-import { setOverlay, getAllAudios, deleteAudioFile } from "../../store/index";
+import { setOverlay, setDialogData, getAllAudios, deleteAudioFile } from "../../store/index";
 
 // Helpers
 import { dateToTableFormat } from "../../shared/helpers/convert";
@@ -39,9 +40,64 @@ class NLP extends Component {
         getAllAudios();
     }
 
+    onAcceptDelete = () => {
+        const { selectedRow } = this.state;
+        const { deleteAudioFile } = this.props;
+        deleteAudioFile(selectedRow.id);
+        this.setState({ openConfirmationDialog: false });
+    }
+
+    CustomToolbar = () => {
+        return (
+            <GridToolbarContainer>
+                <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    style={{ textTransform: 'none' }}
+                    onClick={this.upload}
+                >
+                    Upload Audio File
+                </Button>
+                <GridToolbar />
+                {/* <GridToolbarColumnsButton />
+                <GridToolbarFilterButton />
+                <GridToolbarExport /> */}
+            </GridToolbarContainer>
+        );
+    }
+
+    handleDownloadDoc = (row) => {
+        const link = document.createElement('a');
+        link.href = 'http://localhost:5000/static/audios/preamble.wav';
+        link.target = '_blank';
+        link.download = 'http://localhost:5000/static/audios/preamble.wav';
+
+        link.setAttribute(
+            'download',
+            `FileName.pdf`,
+        );
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    edit = (row) => {
+        const { setOverlay, setDialogData } = this.props;
+
+        setOverlay("add-audio-file");
+        setDialogData({ "mode": "edit", "title": "Edit Audio File", "data": row });
+    }
+
+    upload = () => {
+        const { setOverlay, setDialogData } = this.props;
+
+        setOverlay("add-audio-file")
+        setDialogData({ "mode": "upload", "title": "Upload Audio File", "data": {} });
+    }
+
     render() {
-        const { openConfirmationDialog, confirmationMessage, selectedRow } = this.state;
-        const { setOverlay, audios, deleteAudioFile } = this.props;
+        const { openConfirmationDialog, confirmationMessage } = this.state;
+        const { setOverlay, audios } = this.props;
 
         const columns = [
             {
@@ -67,19 +123,16 @@ class NLP extends Component {
                 field: 'filename',
                 headerName: 'File Name',
                 width: 200,
-                editable: true,
             },
             {
                 field: 'model',
                 headerName: 'Model',
                 width: 150,
-                editable: true,
             },
             {
                 field: 'createdAt',
                 headerName: 'Created Time',
                 width: 200,
-                editable: true,
                 valueGetter: (params) =>
                     `${dateToTableFormat(params.row.createdAt) || ''}`,
             },
@@ -87,7 +140,6 @@ class NLP extends Component {
                 field: 'updatedAt',
                 headerName: 'Updated Time',
                 width: 200,
-                editable: true,
                 valueGetter: (params) =>
                     `${dateToTableFormat(params.row.updatedAt) || 'No update'}`,
             },
@@ -95,19 +147,25 @@ class NLP extends Component {
                 field: 'path',
                 headerName: 'Path',
                 width: 400,
-                editable: true,
             },
             {
                 field: 'actions',
                 headerName: 'Actions',
-                width: 100,
+                width: 150,
                 renderCell: (params) => {
                     return (
                         <Stack direction="row" spacing={2}>
                             <IconButton
+                                aria-label="download"
+                                color="success"
+                                onClick={() => { this.handleDownloadDoc("downloadApi") }}
+                            >
+                                <DownloadIcon />
+                            </IconButton>
+                            <IconButton
                                 aria-label="edit"
                                 color="primary"
-                                onClick={() => { console.log(params.row) }}
+                                onClick={() => { this.edit(params.row) }}
                             >
                                 <EditIcon />
                             </IconButton>
@@ -132,15 +190,15 @@ class NLP extends Component {
 
         return (
             <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
-                <Header category="Apps" title="NLP" />
-                <Button
+                <Header category="NLP" title="Audio Files" />
+                {/* <Button
                     variant="contained"
                     startIcon={<AddIcon />}
                     style={{ textTransform: 'none' }}
-                    onClick={() => { setOverlay("add-audio-file") }}
+                    onClick={this.upload}
                 >
                     Upload Audio File
-                </Button>
+                </Button> */}
 
                 <Box sx={{ height: 400, width: '100%' }} mt={2}>
                     <DataGrid
@@ -149,7 +207,9 @@ class NLP extends Component {
                         pageSize={5}
                         rowsPerPageOptions={[5]}
                         disableSelectionOnClick
-                        experimentalFeatures={{ newEditingApi: true }}
+                        components={{ Toolbar: this.CustomToolbar }}
+                    // components={{ Toolbar: GridToolbar }}
+                    // experimentalFeatures={{ newEditingApi: true }}
                     />
                 </Box>
 
@@ -157,7 +217,7 @@ class NLP extends Component {
                     open={openConfirmationDialog}
                     text={confirmationMessage}
                     onClose={() => { this.setState({ openConfirmationDialog: false }) }}
-                    onAccept={() => { deleteAudioFile(selectedRow.id) }}
+                    onAccept={this.onAcceptDelete}
                 />
             </div >
         );
@@ -174,7 +234,8 @@ const mdtp = (dispatch) => {
     return {
         getAllAudios: () => dispatch(getAllAudios()),
         setOverlay: (payload) => dispatch(setOverlay(payload)),
-        deleteAudioFile: (payload) => dispatch(deleteAudioFile(payload))
+        deleteAudioFile: (payload) => dispatch(deleteAudioFile(payload)),
+        setDialogData: (payload) => dispatch(setDialogData(payload))
     }
 }
 

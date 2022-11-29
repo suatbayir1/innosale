@@ -1,8 +1,9 @@
 // TYPES
-import { SET_AUDIOS } from "./nlpTypes";
+import { SET_AUDIOS, UPLOAD_AUDIO_LOADING } from "./nlpTypes";
 
 const initialState = {
     audios: [],
+    uploadAudioLoading: false,
 }
 
 const nlpReducer = (state = initialState, action) => {
@@ -11,6 +12,11 @@ const nlpReducer = (state = initialState, action) => {
             return {
                 ...state,
                 audios: action.payload
+            }
+        case UPLOAD_AUDIO_LOADING:
+            return {
+                ...state,
+                uploadAudioLoading: action.payload,
             }
         default:
             return state;

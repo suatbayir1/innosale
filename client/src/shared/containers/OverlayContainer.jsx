@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { connect } from "react-redux";
 
 // Components
-import UploadAudioFile from '../../nlp/overlays/UploadAudioFile';
+import AudioFileOverlay from '../../nlp/overlays/AudioFileOverlay';
 
 // Actions
 import { setOverlay } from "../../store/index";
@@ -12,10 +12,9 @@ class OverlayContainer extends Component {
     getOverlay = () => {
         const { overlay } = this.props;
 
-        console.log("return", overlay);
         switch (overlay) {
             case 'add-audio-file':
-                return <UploadAudioFile />
+                return <AudioFileOverlay />
             default: return null
         }
     }

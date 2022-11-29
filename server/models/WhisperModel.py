@@ -58,6 +58,16 @@ class WhisperModel(Base):
         except Exception as e:
             return [e, 500]
 
+    def get_audio_by_id(self, id):
+        try:
+            return self.base.mysql.select_by_id(
+                table_name = "audios", 
+                id = [id]
+            )
+            
+        except Exception as e:
+            return [e, 500]
+
     def delete_audio_file(self, id):
         try:
             return self.base.mysql.delete(

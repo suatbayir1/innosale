@@ -14,7 +14,6 @@ class Base():
             os.environ.get('DATABASE_PASSWORD'), 
             os.environ.get('DATABASE_NAME')
             )
-        self.table_name = "parts"
 
     def response(self, data = [], message = "Default Message", total_count = 0):
         return jsonify(
