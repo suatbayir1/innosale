@@ -2,7 +2,6 @@
 import { SET_OVERLAY, SET_DIALOG_DATA } from "./sharedTypes";
 
 export const setOverlay = (payload) => {
-    console.log(payload)
     return {
         type: SET_OVERLAY,
         payload,

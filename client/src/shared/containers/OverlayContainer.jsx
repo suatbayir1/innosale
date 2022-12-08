@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 
 // Components
 import AudioFileOverlay from '../../nlp/overlays/AudioFileOverlay';
+import PartOverlay from '../../parts/overlays/PartOverlay';
 
 // Actions
 import { setOverlay } from "../../store/index";
@@ -15,13 +16,14 @@ class OverlayContainer extends Component {
         switch (overlay) {
             case 'add-audio-file':
                 return <AudioFileOverlay />
+            case 'add-part':
+                return <PartOverlay />
             default: return null
         }
     }
 
     render() {
 
-        console.log("type", this.props.overlay);
         return (
             <>
                 {this.getOverlay()}

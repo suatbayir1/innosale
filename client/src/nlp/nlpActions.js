@@ -3,7 +3,7 @@ import axios from "axios";
 import { NotificationManager } from 'react-notifications';
 
 // Types
-import { UPLOAD_AUDIO_LOADING, SET_AUDIOS, UPDATE_AUDIO } from "./nlpTypes";
+import { UPLOAD_AUDIO_LOADING, SET_AUDIOS } from "./nlpTypes";
 
 // Actions
 import { setOverlay } from "../store/index";
@@ -46,7 +46,6 @@ export const uploadAudioFile = (payload) => {
         axios
             .post(url, payload)
             .then(response => {
-                console.log(response)
                 if (response.status === 200) {
                     NotificationManager.success(response.data.message, 'Successfull', 3000);
                     dispatch(setOverlay('none'));
@@ -54,7 +53,6 @@ export const uploadAudioFile = (payload) => {
                 }
             })
             .catch(err => {
-                console.log(err);
                 NotificationManager.error(err.response.data.message, 'Error', 3000);
             })
             .finally(() => {
@@ -70,7 +68,6 @@ export const deleteAudioFile = (id) => {
         axios
             .delete(url)
             .then(response => {
-                console.log(response);
                 if (response.status === 200) {
                     NotificationManager.success(response.data.message, 'Success', 3000);
                 }
@@ -90,7 +87,6 @@ export const updateAudio = (payload) => {
         axios
             .put(url, payload)
             .then(response => {
-                console.log(response)
                 if (response.status === 200) {
                     NotificationManager.success(response.data.message, 'Successfull', 3000);
                     dispatch(setOverlay('none'));

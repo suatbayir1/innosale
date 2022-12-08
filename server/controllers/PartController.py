@@ -26,7 +26,7 @@ class PartController(FlaskView, Base):
             confirm, message = self.base.request_validation(request.json, required_keys.part["add"])
 
             if not confirm:
-                return self.base.response(message = message)
+                return self.base.response(message = message), 400
 
             part = Part(
                 teklif_no = request.json["teklif_no"], 
@@ -41,7 +41,7 @@ class PartController(FlaskView, Base):
                 sac_ts_max = request.json["sac_ts_max"],
                 sac_uzama = request.json["sac_uzama"],
                 sertlik = request.json["sertlik"],
-                hazirlama_tarihi = request.json["hazirlama_tarihi"],
+                hazirlama_tarihi = request.json["hazirlanma_tarihi"],
             )
 
             result = self.part_model.add(part)
@@ -80,3 +80,18 @@ class PartController(FlaskView, Base):
             return self.base.response(message = e), 500
         finally:
             pass
+
+    @route("/delete/<id>", methods = ["DELETE"])
+    def delete(self, id):
+        try:
+            print(id)
+            part = self.part_model.get_part_by_id(id)
+            print(part)
+            if part[1] != 200:
+                return self.base.response(message = "No record found for the that id"), 404
+
+            result = self.part_model.delete_part(id)
+
+            return self.base.response(message = str(result[0])), result[1]
+        except Exception as e:
+            return self.base.response(message = e), 500

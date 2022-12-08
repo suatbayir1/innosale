@@ -51,7 +51,6 @@ class UploadAudioFile extends Component {
         this.setState({
             files: files
         });
-        console.log(files);
     }
 
     upload = () => {
@@ -168,7 +167,7 @@ class UploadAudioFile extends Component {
                                         onChange={this.handleChange}
                                         filesLimit={1}
                                         showPreviews={true}
-                                        acceptedFiles={['audio/*']}
+                                        acceptedFiles={['audio/*', 'video/*']}
                                         showPreviewsInDropzone={false}
                                         showFileNames={true}
                                         showFileNamesInPreview={true}

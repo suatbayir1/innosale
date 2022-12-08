@@ -14,7 +14,6 @@ const sharedReducer = (state = initialState, action) => {
                 overlay: action.payload
             }
         case SET_DIALOG_DATA:
-            console.log("reducer", action.payload);
             return {
                 ...state,
                 dialogData: action.payload

@@ -1,16 +1,17 @@
 // Libraries
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarExport, GridToolbarColumnsButton, GridDensity, GridToolbarFilterButton } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar, GridToolbarContainer } from '@mui/x-data-grid';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
 import DownloadIcon from '@mui/icons-material/Download';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 // Components
 import { Header } from '../../components';
@@ -20,18 +21,20 @@ import { setOverlay, setDialogData, getAllAudios, deleteAudioFile } from "../../
 
 // Helpers
 import { dateToTableFormat } from "../../shared/helpers/convert";
+import { downloadFile } from "../../shared/helpers/export";
 
 // Overlays
 import DeleteConfirmationDialog from "../../shared/overlays/DeleteConfirmationDialog";
 
-class NLP extends Component {
+class AudioFiles extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             openConfirmationDialog: false,
             confirmationMessage: "",
-            selectedRow: {}
+            selectedRow: {},
+            pageSize: 5,
         }
     }
 
@@ -50,35 +53,20 @@ class NLP extends Component {
     CustomToolbar = () => {
         return (
             <GridToolbarContainer>
-                <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    style={{ textTransform: 'none' }}
-                    onClick={this.upload}
+                <div
+                    style={{ padding: '4px 4px 0px' }}
                 >
-                    Upload Audio File
-                </Button>
+                    <Button
+                        startIcon={<FileUploadIcon />}
+                        onClick={this.upload}
+                        size="small"
+                    >
+                        UPLOAD
+                    </Button>
+                </div>
                 <GridToolbar />
-                {/* <GridToolbarColumnsButton />
-                <GridToolbarFilterButton />
-                <GridToolbarExport /> */}
             </GridToolbarContainer>
         );
-    }
-
-    handleDownloadDoc = (row) => {
-        const link = document.createElement('a');
-        link.href = 'http://localhost:5000/static/audios/preamble.wav';
-        link.target = '_blank';
-        link.download = 'http://localhost:5000/static/audios/preamble.wav';
-
-        link.setAttribute(
-            'download',
-            `FileName.pdf`,
-        );
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
     }
 
     edit = (row) => {
@@ -96,8 +84,8 @@ class NLP extends Component {
     }
 
     render() {
-        const { openConfirmationDialog, confirmationMessage } = this.state;
-        const { setOverlay, audios } = this.props;
+        const { openConfirmationDialog, confirmationMessage, pageSize } = this.state;
+        const { audios } = this.props;
 
         const columns = [
             {
@@ -106,18 +94,18 @@ class NLP extends Component {
                 width: 50,
                 renderCell: (params) => {
                     return (
-                        <Stack direction="row" spacing={2}>
-                            <IconButton aria-label="edit" color="primary" onClick={() => { console.log(params) }}>
+                        <Link to={`/audio-player/${params.row.id}`}>
+                            <IconButton aria-label="edit" color="primary">
                                 <NorthEastIcon />
                             </IconButton>
-                        </Stack>
+                        </Link>
                     );
                 }
             },
             {
                 field: 'id',
                 headerName: 'ID',
-                width: 90
+                width: 70
             },
             {
                 field: 'filename',
@@ -158,7 +146,7 @@ class NLP extends Component {
                             <IconButton
                                 aria-label="download"
                                 color="success"
-                                onClick={() => { this.handleDownloadDoc("downloadApi") }}
+                                onClick={() => { downloadFile(params.row) }}
                             >
                                 <DownloadIcon />
                             </IconButton>
@@ -191,25 +179,16 @@ class NLP extends Component {
         return (
             <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
                 <Header category="NLP" title="Audio Files" />
-                {/* <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    style={{ textTransform: 'none' }}
-                    onClick={this.upload}
-                >
-                    Upload Audio File
-                </Button> */}
-
                 <Box sx={{ height: 400, width: '100%' }} mt={2}>
                     <DataGrid
                         rows={audios}
                         columns={columns}
-                        pageSize={5}
-                        rowsPerPageOptions={[5]}
                         disableSelectionOnClick
                         components={{ Toolbar: this.CustomToolbar }}
-                    // components={{ Toolbar: GridToolbar }}
-                    // experimentalFeatures={{ newEditingApi: true }}
+                        pageSize={pageSize}
+                        onPageSizeChange={(pageSize) => this.setState({ pageSize })}
+                        rowsPerPageOptions={[5, 10, 20]}
+                        pagination
                     />
                 </Box>
 
@@ -239,4 +218,4 @@ const mdtp = (dispatch) => {
     }
 }
 
-export default connect(mstp, mdtp)(NLP);
+export default connect(mstp, mdtp)(AudioFiles);

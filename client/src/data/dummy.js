@@ -1,5 +1,5 @@
 import React from 'react';
-import { AiOutlineCalendar, AiOutlineShoppingCart, AiOutlineAreaChart, AiOutlineBarChart, AiOutlineStock } from 'react-icons/ai';
+import { AiOutlineCalendar, AiOutlineShoppingCart, AiOutlineAreaChart, AiOutlineBarChart, AiOutlineStock, AiFillAudio } from 'react-icons/ai';
 import { FiShoppingBag, FiEdit, FiPieChart, FiBarChart, FiCreditCard, FiStar, FiShoppingCart } from 'react-icons/fi';
 import { BsKanban, BsBarChart, BsBoxSeam, BsCurrencyDollar, BsShield, BsChatLeft } from 'react-icons/bs';
 import { BiColorFill } from 'react-icons/bi';
@@ -527,8 +527,10 @@ export const links = [
     title: 'Dashboard',
     links: [
       {
-        name: 'ecommerce',
+        name: 'Ecommerce',
         icon: <FiShoppingBag />,
+        path: 'ecommerce',
+        routes: ["ecommerce"]
       },
     ],
   },
@@ -537,49 +539,69 @@ export const links = [
     title: 'Pages',
     links: [
       {
-        name: 'orders',
+        name: 'Orders',
         icon: <AiOutlineShoppingCart />,
+        path: 'orders',
+        routes: ["orders"]
       },
       {
-        name: 'employees',
+        name: 'Employees',
         icon: <IoMdContacts />,
+        path: 'employees',
+        routes: ["employees"]
       },
       {
-        name: 'customers',
+        name: 'Customers',
+        path: 'customers',
+        routes: ["customers"],
         icon: <RiContactsLine />,
       },
       {
-        name: 'parts',
+        name: 'Parts',
+        path: 'parts',
         icon: <GrProductHunt />,
+        routes: ["parts"]
       },
     ],
   },
   {
-    title: 'Apps',
+    title: 'NLP',
     links: [
       {
-        name: 'nlp',
-        icon: <AiOutlineCalendar />,
+        name: 'Audio Files',
+        path: 'audio-files',
+        icon: <AiFillAudio />,
+        routes: ["audio-files", "audio-player"]
       },
       {
-        name: 'calendar',
+        name: 'Calendar',
+        path: 'calendar',
         icon: <AiOutlineCalendar />,
+        routes: ["calendar"]
       },
       {
-        name: 'kanban',
+        name: 'Kanban',
+        path: 'kanban',
         icon: <BsKanban />,
+        routes: ["kanban"]
       },
       {
-        name: 'editor',
+        name: 'Editor',
+        path: 'editor',
         icon: <FiEdit />,
+        routes: ["editor"]
       },
       {
-        name: 'color-picker',
+        name: 'Color Picker',
+        path: 'color-picker',
         icon: <BiColorFill />,
+        routes: ["color-picker"]
       },
       {
-        name: '3D-parts',
+        name: '3D Parts',
+        path: '3D-parts',
         icon: <BiColorFill />,
+        routes: ["3D-parts"]
       },
     ],
   },
@@ -587,36 +609,52 @@ export const links = [
     title: 'Charts',
     links: [
       {
-        name: 'line',
+        name: 'Line',
+        path: 'line',
         icon: <AiOutlineStock />,
+        routes: ["line"]
       },
       {
-        name: 'area',
+        name: 'Area',
+        path: 'area',
         icon: <AiOutlineAreaChart />,
+        routes: ["area"]
       },
 
       {
-        name: 'bar',
+        name: 'Bar',
+        path: 'bar',
         icon: <AiOutlineBarChart />,
+        routes: ["bar"]
       },
       {
-        name: 'pie',
+        name: 'Pie',
+        path: 'pie',
         icon: <FiPieChart />,
+        routes: ["pie"]
       },
       {
-        name: 'financial',
+        name: 'Financial',
+        path: 'financial',
         icon: <RiStockLine />,
+        routes: ["financial"]
       },
       {
-        name: 'color-mapping',
+        name: 'Color Mapping',
+        path: 'color-mapping',
         icon: <BsBarChart />,
+        routes: ["color-mapping"]
       },
       {
-        name: 'pyramid',
+        name: 'Pyramid',
+        path: 'pyramid',
         icon: <GiLouvrePyramid />,
+        routes: ["pyramid"]
       },
       {
-        name: 'stacked',
+        name: 'Stacked',
+        path: 'stacked',
+        routes: ["stacked"],
         icon: <AiOutlineBarChart />,
       },
     ],

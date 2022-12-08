@@ -13,7 +13,6 @@ const UserProfile = () => {
   const dispatch = useDispatch();
 
   const user = useSelector(state => state.auth.user);
-  console.log(user);
 
   return (
     <div className="nav-item absolute right-1 top-16 bg-white dark:bg-[#42464D] p-8 rounded-lg w-96">

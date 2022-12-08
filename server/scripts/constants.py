@@ -4,7 +4,7 @@ tables = [
         "sql": """
             CREATE TABLE IF NOT EXISTS parts (
                 id int not null primary key auto_increment,
-                teklif_id int,
+                teklif_id int UNIQUE,
                 teklif_no varchar(50),
                 teklif_talep_rev_no int,
                 sac_kalinlik float,
@@ -19,7 +19,9 @@ tables = [
                 sertlik varchar(50),
                 hazirlanma_tarihi date,
                 tonaj float,
-                model_path varchar(255) default ''
+                model_path varchar(255) default '',
+                createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updatedAt DATETIME ON UPDATE CURRENT_TIMESTAMP
                 )
         """
     },
@@ -60,7 +62,9 @@ tables = [
                 OLCUM int,
                 iscilik_mly int,
                 iscilik_saat int,
-                toplam_mly int
+                toplam_mly int,
+                createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updatedAt DATETIME ON UPDATE CURRENT_TIMESTAMP
             )
         """
     },

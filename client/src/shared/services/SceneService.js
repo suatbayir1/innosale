@@ -88,13 +88,11 @@ class SceneService {
     }
 
     addPlyFile = async (path = "Lucy100k.ply") => {
-        console.log("ply metot")
         const loader = new PLYLoader();
         let vm = this;
 
         await loader.load(require(`../../data/models/${path}`), async function (geometry) {
             geometry.computeVertexNormals();
-            console.log(geometry)
             const material = new THREE.MeshStandardMaterial({ color: 0x0055ff, flatShading: true });
             const mesh = new THREE.Mesh(geometry, material);
 
@@ -111,7 +109,6 @@ class SceneService {
     }
 
     renderGLTFModel = async () => {
-        console.log("gltf model")
         const loader = new GLTFLoader();
         const dracoLoader = new DRACOLoader();
 
@@ -124,7 +121,6 @@ class SceneService {
             // '../../assets/models/factory-glb.glb',
 
             async function (gltf) {
-                console.log("gltf", gltf)
                 gltf.scene.scale.set(0.01, 0.01, 0.01);
                 gltf.scene.position.set(0, 0, 0)
                 vm.renderer.setClearColor(0xbfe3dd);

@@ -59,7 +59,6 @@ class PartModel extends Component {
     }
 
     addPlyFile = async () => {
-        console.log(scene);
         const sceneManager = new SceneService(scene, camera, renderer);
         await sceneManager.addPlyFile('dolphins.ply');
         await sceneManager.addPlyFile('Lucy100k.ply');
@@ -67,8 +66,6 @@ class PartModel extends Component {
 
 
     render() {
-        console.log(this.context);
-
         return (
             <div className='m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl'>
                 <Header category={"App"} title={"Part Model"} />

@@ -12,7 +12,7 @@ import { Navbar, Footer, Sidebar, ThemeSettings } from './components';
 import {
   PartModel, Ecommerce, Orders, Calendar, Employees, Stacked, Pyramid,
   Customers, Kanban, Line, Area, Bar, Pie, Financial, ColorPicker,
-  ColorMapping, Editor, Parts, NLP
+  ColorMapping, Editor, Parts, AudioFiles, AudioPlayer
 } from './pages';
 import OverlayContainer from './shared/containers/OverlayContainer';
 
@@ -92,7 +92,8 @@ const App = () => {
                 <Route path="/parts" element={<Parts />} />
 
                 {/* apps  */}
-                <Route path="/nlp" element={<NLP />} />
+                <Route path="/audio-files" element={<AudioFiles />} />
+                <Route path="/audio-player/:id" element={<AudioPlayer />} />
                 <Route path="/kanban" element={<Kanban />} />
                 <Route path="/editor" element={<Editor />} />
                 <Route path="/calendar" element={<Calendar />} />

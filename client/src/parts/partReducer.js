@@ -1,8 +1,9 @@
 // TYPES
-import { GET_PARTS } from "./partTypes";
+import { GET_PARTS, SET_PARTS_GRID_LOADING } from "./partTypes";
 
 const initialState = {
-    parts: [],
+    parts: {},
+    partsGridLoading: false,
 }
 
 const partReducer = (state = initialState, action) => {
@@ -11,6 +12,11 @@ const partReducer = (state = initialState, action) => {
             return {
                 ...state,
                 parts: action.payload
+            }
+        case SET_PARTS_GRID_LOADING:
+            return {
+                ...state,
+                partsGridLoading: action.payload
             }
         default:
             return state;

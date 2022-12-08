@@ -4,6 +4,10 @@ export {
 
 export {
     getParts,
+    addPart,
+    deletePart,
+    updatePart,
+    setPartsGridLoading,
 } from "../parts/partActions";
 
 export {
