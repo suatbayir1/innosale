@@ -12,6 +12,7 @@ from middlewares.Base import Base
 from controllers.PartController import PartController
 from controllers.OperationController import OperationController
 from controllers.FileController import FileController
+# from helpers import file_converter
 # from controllers.WhisperController import WhisperController
 # from controllers.Similarity3DController import Similarity3DController
 

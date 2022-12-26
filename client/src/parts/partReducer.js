@@ -1,9 +1,10 @@
 // TYPES
-import { GET_PARTS, SET_PARTS_GRID_LOADING } from "./partTypes";
+import { GET_PARTS, SET_PARTS_GRID_LOADING, SET_PART_OVERLAY_LOADING } from "./partTypes";
 
 const initialState = {
     parts: {},
     partsGridLoading: false,
+    partOverlayLoading: false,
 }
 
 const partReducer = (state = initialState, action) => {
@@ -17,6 +18,11 @@ const partReducer = (state = initialState, action) => {
             return {
                 ...state,
                 partsGridLoading: action.payload
+            }
+        case SET_PART_OVERLAY_LOADING:
+            return {
+                ...state,
+                partOverlayLoading: action.payload
             }
         default:
             return state;

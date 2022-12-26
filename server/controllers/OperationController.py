@@ -19,6 +19,20 @@ class OperationController(FlaskView, Base):
         self.base = Base()
         self.operation_model = OperationModel()
 
+    @route("/getAll", methods = ["GET"])
+    def get_all(self):
+        try:
+            skip = request.args.get('skip') if request.args.get('skip') else 0
+            limit = request.args.get('limit') if request.args.get('limit') else 10
+
+            result = self.operation_model.get_all(skip, limit)
+            print(result)
+            return self.base.response(data = result[0], total_count = result[1], message = "Operation records successfully fetched"), 200
+        except Exception as e:
+            return self.base.response(message = e), 500
+        finally:
+            pass
+
     @route("/add", methods = ["POST"])
     def add(self):
         try:

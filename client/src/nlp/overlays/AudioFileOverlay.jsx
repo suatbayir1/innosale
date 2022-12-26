@@ -145,7 +145,7 @@ class UploadAudioFile extends Component {
                                                 labelId="model-select"
                                                 id="model-select"
                                                 value={model}
-                                                label="Age"
+                                                label="Model"
                                                 onChange={(e) => { this.setState({ model: e.target.value }) }}
                                             >
                                                 <MenuItem value={"tiny"}>Tiny</MenuItem>

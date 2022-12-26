@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 // Components
 import AudioFileOverlay from '../../nlp/overlays/AudioFileOverlay';
 import PartOverlay from '../../parts/overlays/PartOverlay';
+import DetailOffer from '../../offers/overlays/DetailOffer';
+import ConfirmationDialog from '../../components/ConfirmationDialogClass';
 
 // Actions
 import { setOverlay } from "../../store/index";
@@ -18,6 +20,10 @@ class OverlayContainer extends Component {
                 return <AudioFileOverlay />
             case 'add-part':
                 return <PartOverlay />
+            case 'detail-offer':
+                return <DetailOffer />
+            case 'summarize-settings':
+                return <ConfirmationDialog />
             default: return null
         }
     }

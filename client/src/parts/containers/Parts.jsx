@@ -4,13 +4,12 @@ import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import { DataGrid, GridToolbar, GridToolbarContainer } from '@mui/x-data-grid';
-import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { withStyles } from '@material-ui/core/styles';
 
 // Components
 import { Header } from '../../components';
@@ -27,6 +26,14 @@ import DeleteConfirmationDialog from "../../shared/overlays/DeleteConfirmationDi
 // Actions
 import { getParts, setPartsGridLoading } from '../../store/index';
 
+const styles = theme => ({
+    root: {
+        "& .MuiDataGrid-columnHeaderCheckbox .MuiDataGrid-columnHeaderTitleContainer": {
+            display: "none"
+        }
+    }
+});
+
 class Parts extends Component {
     constructor(props) {
         super(props);
@@ -36,6 +43,7 @@ class Parts extends Component {
             confirmationMessage: "",
             selectedRow: {},
             pageSize: 5,
+            selected: [],
         }
     }
 
@@ -44,7 +52,7 @@ class Parts extends Component {
         this.props.getParts();
     }
 
-    addPart = () => {
+    add = () => {
         const { setOverlay, setDialogData } = this.props;
 
         setOverlay("add-part")
@@ -52,6 +60,11 @@ class Parts extends Component {
     }
 
     CustomToolbar = () => {
+        const { selected } = this.state;
+        const { parts } = this.props;
+
+        const selectedPart = parts?.result.find(part => part.id === selected[0]);
+
         return (
             <GridToolbarContainer>
                 <div
@@ -59,22 +72,63 @@ class Parts extends Component {
                 >
                     <Button
                         startIcon={<FileUploadIcon />}
-                        onClick={this.addPart}
+                        onClick={this.add}
                         size="small"
                     >
                         ADD
                     </Button>
+                    <Button
+                        startIcon={<EditIcon />}
+                        onClick={this.edit}
+                        disabled={selected.length === 1 ? false : true}
+                        size="small"
+                    >
+                        EDIT
+                    </Button>
+                    <Button
+                        startIcon={<DeleteIcon />}
+                        onClick={this.delete}
+                        disabled={selected.length === 1 ? false : true}
+                        size="small"
+                    >
+                        DELETE
+                    </Button>
+                    <Link to={selected.length === 1 ? `/part/${selectedPart.id} ` : "#"}>
+                        <Button
+                            startIcon={<NorthEastIcon />}
+                            disabled={selected.length === 1 ? false : true}
+                            size="small"
+                        >
+                            DETAIL
+                        </Button>
+                    </Link>
                 </div>
                 <GridToolbar />
             </GridToolbarContainer>
         );
     }
 
-    edit = (row) => {
-        const { setOverlay, setDialogData } = this.props;
+    delete = () => {
+        const { selected } = this.state;
+        const { parts } = this.props;
+
+        const selectedPart = parts?.result.find(part => part.id === selected[0]);
+
+        this.setState({
+            openConfirmationDialog: true,
+            confirmationMessage: `The part record with ${selectedPart.id} IDs will be deleted from the system. Do you want to continue?`,
+            selectedRow: selectedPart
+        })
+    }
+
+    edit = () => {
+        const { selected } = this.state;
+        const { setOverlay, setDialogData, parts } = this.props;
+
+        const selectedPart = parts?.result.find(part => part.id === selected[0]);
 
         setOverlay("add-part");
-        setDialogData({ "mode": "edit", "title": "Edit Part", "data": row });
+        setDialogData({ "mode": "edit", "title": "Edit Part", "data": selectedPart });
     }
 
     onAcceptDelete = () => {
@@ -86,25 +140,10 @@ class Parts extends Component {
     }
 
     render() {
-        const { openConfirmationDialog, confirmationMessage, pageSize } = this.state;
-        const { parts, partsGridLoading } = this.props;
+        const { openConfirmationDialog, confirmationMessage, pageSize, selected } = this.state;
+        const { parts, partsGridLoading, classes } = this.props;
 
-        console.log(partsGridLoading);
         const columns = [
-            {
-                field: 'direction',
-                headerName: '',
-                width: 50,
-                renderCell: (params) => {
-                    return (
-                        <Link to={`/audio-player/${params.row.id}`}>
-                            <IconButton aria-label="edit" color="primary">
-                                <NorthEastIcon />
-                            </IconButton>
-                        </Link>
-                    );
-                }
-            },
             {
                 field: 'id',
                 headerName: 'ID',
@@ -176,11 +215,11 @@ class Parts extends Component {
                 width: '100',
             },
             {
-                field: 'hazirlanma_tarihi',
-                headerName: 'Hazırlanma Tarihi',
+                field: 'hazirlama_tarihi',
+                headerName: 'Hazırlama Tarihi',
                 width: '150',
                 valueGetter: (params) =>
-                    `${dateToTableFormat(params.row.hazirlanma_tarihi) || ''}`,
+                    `${dateToTableFormat(params.row.hazirlama_tarihi) || ''}`,
             },
             {
                 field: 'tonaj',
@@ -195,47 +234,16 @@ class Parts extends Component {
             {
                 field: 'createdAt',
                 headerName: 'Created Time',
-                width: 150,
+                width: 170,
                 valueGetter: (params) =>
                     `${dateToTableFormat(params.row.createdAt) || ''}`,
             },
             {
                 field: 'updatedAt',
                 headerName: 'Updated Time',
-                width: 150,
+                width: 170,
                 valueGetter: (params) =>
                     `${dateToTableFormat(params.row.updatedAt) || 'No update'}`,
-            },
-            {
-                field: 'actions',
-                headerName: 'Actions',
-                width: 120,
-                renderCell: (params) => {
-                    return (
-                        <Stack direction="row" spacing={2}>
-                            <IconButton
-                                aria-label="edit"
-                                color="primary"
-                                onClick={() => { this.edit(params.row) }}
-                            >
-                                <EditIcon />
-                            </IconButton>
-                            <IconButton
-                                aria-label="delete"
-                                color="error"
-                                onClick={() => {
-                                    this.setState({
-                                        openConfirmationDialog: true,
-                                        confirmationMessage: `The part record with ${params.row.id} IDs will be deleted from the system. Do you want to continue?`,
-                                        selectedRow: params.row
-                                    })
-                                }}
-                            >
-                                <DeleteIcon />
-                            </IconButton>
-                        </Stack>
-                    );
-                }
             }
         ];
 
@@ -244,6 +252,7 @@ class Parts extends Component {
                 <Header category="Page" title="Parts List" />
                 <Box sx={{ height: 400, width: '100%' }} mt={2}>
                     <DataGrid
+                        className={classes.root}
                         rows={parts?.result || []}
                         columns={columns}
                         disableSelectionOnClick
@@ -253,6 +262,20 @@ class Parts extends Component {
                         rowsPerPageOptions={[5, 10, 20]}
                         pagination
                         loading={partsGridLoading}
+                        checkboxSelection
+                        hideFooterSelectedRowCount
+                        selectionModel={selected}
+                        onSelectionModelChange={(selection) => {
+                            console.log("selection", selection)
+                            if (selection.length > 1) {
+                                const selectionSet = new Set(selected);
+                                const result = selection.filter((s) => !selectionSet.has(s));
+
+                                this.setState({ selected: result });;
+                            } else {
+                                this.setState({ selected: selection });;
+                            }
+                        }}
                     />
                 </Box>
 
@@ -284,4 +307,4 @@ const mdtp = (dispatch) => {
     }
 }
 
-export default connect(mstp, mdtp)(Parts);
+export default withStyles(styles)(connect(mstp, mdtp)(Parts));

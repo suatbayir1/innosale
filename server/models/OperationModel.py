@@ -5,20 +5,18 @@ import os
 # Core
 from core.database.MySQL import MySQL
 
-class OperationModel():
+# Middlewares
+from middlewares.Base import Base
+
+class OperationModel(Base):
     def __init__(self):
-        self.mysql = MySQL(
-            os.environ.get('DATABASE_HOST'), 
-            os.environ.get('DATABASE_USER'), 
-            os.environ.get('DATABASE_PASSWORD'), 
-            os.environ.get('DATABASE_NAME')
-            )
         self.table_name = "operations"
+        self.base = Base()
 
     def add(self, operation):
         try: 
             print(operation.teklif_no)
-            result = self.mysql.insert(
+            result = self.base.mysql.insert(
                 table_name = self.table_name,
                 columns = """
                 parca_no, teklif_no, teklif_id, teklif_talep_rev_no, teklif_parca_rev_no, operasyon_no, operasyon_adi,
@@ -42,3 +40,13 @@ class OperationModel():
             return result
         except Exception as e:
             return [e, code]
+
+    def get_all(self, skip: int, limit: int):
+        try:
+            return self.base.mysql.select_all_skip_limit(
+                table_name = self.table_name, 
+                skip = skip,
+                limit = limit
+            )
+        except Exception as e:
+            return [e, 500]

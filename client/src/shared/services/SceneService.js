@@ -38,6 +38,43 @@ class SceneService {
         return renderer;
     }
 
+    static removeAllObjectFromScene = async (scene, camera, renderer) => {
+        console.log(scene);
+        if (scene !== undefined) {
+            let obj;
+            for (var i = scene.children.length - 1; i >= 0; i--) {
+                if (["GridHelper", "HemisphereLight", "DirectionalLight"].includes(scene.children[i]?.type)) {
+                    continue;
+                }
+                obj = scene.children[i];
+                obj.material = undefined;
+                obj.geometry = undefined;
+                await scene.remove(obj);
+            }
+            await renderer.render(scene, camera);
+            return true;
+        }
+        return false;
+    }
+
+    static removeObjectFromSceneByUuid = async (scene, camera, renderer, uuid) => {
+        console.log(scene);
+        if (scene !== undefined) {
+            let obj;
+            for (var i = scene.children.length - 1; i >= 0; i--) {
+                if (scene.children[i].uuid === uuid) {
+                    obj = scene.children[i];
+                    obj.material = undefined;
+                    obj.geometry = undefined;
+                    await scene.remove(obj);
+                }
+            }
+            await renderer.render(scene, camera);
+            return true;
+        }
+        return false;
+    }
+
     setGround = () => {
         const plane = new THREE.Mesh(
             new THREE.PlaneGeometry(40, 40),
@@ -87,12 +124,47 @@ class SceneService {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
+    addPlyFileWithUrl = async (url) => {
+        const loader = new PLYLoader();
+        let vm = this;
+
+        // 'http://localhost:5002/static/convertedfiles/001_2020_Teklifid_10.ply'
+
+        const geometry = await loader.load(url);
+        console.log("geometry 1", geometry);
+
+        return new Promise((resolve, reject) => {
+            loader.load(url, async function (geometry) {
+                console.log("geometry 2", geometry);
+                geometry.computeVertexNormals();
+                console.log(geometry);
+                const material = new THREE.MeshStandardMaterial({ color: 0x0055ff, flatShading: true });
+                const mesh = new THREE.Mesh(geometry, material);
+
+                mesh.position.x = - 0.2;
+                mesh.position.y = - 0.02;
+                mesh.position.z = - 0.2;
+                // console.log(mesh.scale);
+                mesh.scale.multiplyScalar(0.0006);
+                mesh.castShadow = true;
+                mesh.receiveShadow = true;
+                console.log(mesh);
+
+                await vm.scene.add(mesh);
+                await vm.renderer.render(vm.scene, vm.camera)
+                resolve(mesh.uuid);
+            });
+        })
+    }
+
     addPlyFile = async (path = "Lucy100k.ply") => {
         const loader = new PLYLoader();
         let vm = this;
 
         await loader.load(require(`../../data/models/${path}`), async function (geometry) {
+            console.log(geometry);
             geometry.computeVertexNormals();
+            console.log(geometry);
             const material = new THREE.MeshStandardMaterial({ color: 0x0055ff, flatShading: true });
             const mesh = new THREE.Mesh(geometry, material);
 
@@ -100,12 +172,34 @@ class SceneService {
             mesh.position.y = - 0.02;
             mesh.position.z = - 0.2;
             mesh.scale.multiplyScalar(0.0006);
-
             mesh.castShadow = true;
             mesh.receiveShadow = true;
+
             await vm.scene.add(mesh);
             await vm.renderer.render(vm.scene, vm.camera)
         });
+    }
+
+    addPlyFileWithParsing = async (url) => {
+        const loader = new PLYLoader();
+        const geometry = await loader.parse(url);
+
+        console.log(geometry);
+        geometry.computeVertexNormals();
+        const material = new THREE.MeshStandardMaterial({ color: 0x0055ff, flatShading: true });
+        const mesh = new THREE.Mesh(geometry, material);
+
+        mesh.position.x = - 0.2;
+        mesh.position.y = - 0.02;
+        mesh.position.z = - 0.2;
+        mesh.scale.multiplyScalar(0.0006);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+
+        await this.scene.add(mesh);
+        await this.renderer.render(this.scene, this.camera)
+
+        return mesh.uuid;
     }
 
     renderGLTFModel = async () => {

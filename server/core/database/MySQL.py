@@ -90,13 +90,10 @@ class MySQL():
 
     def select_by_id(self, table_name, id):
         try:
-            # find matched rows
             sql = f"SELECT * FROM {table_name} WHERE id = %s"
             self.cursor.execute(sql, id)
-            print("desc", self.cursor.description)
             fields = [field[0] for field in self.cursor.description]
             result = [dict(zip(fields, row)) for row in self.cursor.fetchall()]
-            print(result)
             return result[0], 200
         except Exception as e:
             return [e, 500]

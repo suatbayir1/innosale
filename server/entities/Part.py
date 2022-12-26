@@ -14,6 +14,7 @@ class Part():
         sac_uzama: int,
         sertlik: str,
         hazirlama_tarihi: str,
+        model_path: str
     ):
         self.teklif_no = teklif_no
         self.teklif_talep_rev_no = teklif_talep_rev_no
@@ -30,6 +31,7 @@ class Part():
         self.hazirlama_tarihi = hazirlama_tarihi
         self.tonaj = (sac_kalinlik, kontur_boyu, sac_ts_max)
         self.net_xy_division = (net_x, net_y)
+        self.model_path = model_path
     
     @property
     def teklif_id(self):
@@ -156,3 +158,11 @@ class Part():
             self._net_xy_division = net_x / net_y
         except ZeroDivisionError:
             self._net_xy_division = 0
+
+    @property
+    def model_path(self):
+        return self._model_path
+    
+    @model_path.setter
+    def model_path(self, value):
+        self._model_path = value

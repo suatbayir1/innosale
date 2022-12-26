@@ -14,23 +14,28 @@ var camera, controls, scene, renderer;
 class PartModel extends Component {
     componentDidMount = async () => {
         await this.createScene();
-        await this.responsiveConfiguration();
+        // await this.responsiveConfiguration();
         await this.addPlyFile();
+
+        setTimeout(() => {
+            var container = document.querySelector('#partModelDetailContainer');
+            var rect = container.getBoundingClientRect();
+            renderer.setSize(rect.width, rect.height);
+        }, 1000);
     }
 
     responsiveConfiguration = () => {
-        renderer.setSize(
-            document.querySelector("#visualPanel").clientWidth,
-            document.querySelector("#visualPanel").clientHeight
-        );
+        var container = document.querySelector('#partModelDetailContainer');
+        var rect = container.getBoundingClientRect();
+        renderer.setSize(rect.width, rect.height);
         renderer.render(scene, camera);
 
         window.addEventListener('resize', () => {
-            if (document.querySelector("#visualPanel") !== null) {
-                renderer.setSize(
-                    document.querySelector("#visualPanel").clientWidth,
-                    document.querySelector("#visualPanel").clientHeight
-                );
+            if (document.querySelector("#partModelDetailContainer") !== null) {
+                var container = document.querySelector('#partModelDetailContainer');
+                var rect = container.getBoundingClientRect();
+                renderer.setSize(rect.width, rect.height);
+                renderer.render(scene, camera);
             }
         });
     }
@@ -38,7 +43,7 @@ class PartModel extends Component {
     createScene = async () => {
         scene = SceneService.createScene();
         camera = SceneService.createCamera(35, window.innerWidth / window.innerHeight, 1, 15);
-        renderer = SceneService.createRenderer(window.devicePixelRatio, window.innerWidth, window.innerHeight);
+        renderer = SceneService.createRenderer(window.devicePixelRatio, 1000, 600);
 
         const sceneManager = new SceneService(scene, camera, renderer);
         sceneManager.setGround();
@@ -46,14 +51,14 @@ class PartModel extends Component {
         sceneManager.addShadowedLight(1, 1, 1, 0xffffff, 1.35);
         sceneManager.addShadowedLight(0.5, 1, - 1, 0xffaa00, 1);
 
-        document.getElementById("visualScene").appendChild(renderer.domElement);
+        document.getElementById("partModelDetailScene").appendChild(renderer.domElement);
 
         controls = sceneManager.createOrbitControl(camera, renderer.domElement);
         controls.addEventListener("change", () => {
             renderer.render(scene, camera);
         });
 
-        window.addEventListener('resize', sceneManager.onWindowResize);
+        // window.addEventListener('resize', sceneManager.onWindowResize);
 
         renderer.render(scene, camera);
     }
@@ -66,13 +71,19 @@ class PartModel extends Component {
 
 
     render() {
+        var selection = document.querySelector('#part-model-container');
+        if (selection !== null) {
+            console.log(selection.clientWidth);
+        } else {
+            console.log(0);
+        }
+
         return (
-            <div className='m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl'>
+            <div className='m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl' id={'part-model-container'}>
                 <Header category={"App"} title={"Part Model"} />
 
-
-                < div id="visualPanel" >
-                    <div id="visualScene">
+                <div id="partModelDetailContainer" style={{ width: '100%', height: '500px' }}>
+                    <div id="partModelDetailScene">
                     </div>
                 </div>
             </div >

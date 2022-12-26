@@ -6,13 +6,13 @@ import { TooltipComponent } from '@syncfusion/ej2-react-popups';
 import { NotificationContainer } from 'react-notifications';
 
 // Components
-import { Navbar, Footer, Sidebar, ThemeSettings } from './components';
+import { Navbar, Footer, Sidebar, ThemeSettings, Summarization } from './components';
 
 // Pages && Containers
 import {
   PartModel, Ecommerce, Orders, Calendar, Employees, Stacked, Pyramid,
   Customers, Kanban, Line, Area, Bar, Pie, Financial, ColorPicker,
-  ColorMapping, Editor, Parts, AudioFiles, AudioPlayer
+  ColorMapping, Editor, Parts, AudioFiles, AudioPlayer, Operations, Offers, OfferDetail
 } from './pages';
 import OverlayContainer from './shared/containers/OverlayContainer';
 
@@ -90,6 +90,10 @@ const App = () => {
                 <Route path="/employees" element={<Employees />} />
                 <Route path="/customers" element={<Customers />} />
                 <Route path="/parts" element={<Parts />} />
+                <Route path="/part/:id" element={<PartModel />} />
+                <Route path="/offers" element={<Offers />} />
+                <Route path="/offer-detail/:id" element={<OfferDetail />} />
+                <Route path="/operations" element={<Operations />} />
 
                 {/* apps  */}
                 <Route path="/audio-files" element={<AudioFiles />} />
@@ -99,6 +103,7 @@ const App = () => {
                 <Route path="/calendar" element={<Calendar />} />
                 <Route path="/color-picker" element={<ColorPicker />} />
                 <Route path="/3D-parts" element={<PartModel />} />
+                <Route path="/summ" element={<Summarization />} />
 
                 {/* charts  */}
                 <Route path="/line" element={<Line />} />

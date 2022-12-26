@@ -17,7 +17,7 @@ tables = [
                 sac_ts_max int,
                 sac_uzama int,
                 sertlik varchar(50),
-                hazirlanma_tarihi date,
+                hazirlama_tarihi date,
                 tonaj float,
                 model_path varchar(255) default '',
                 createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,

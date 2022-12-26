@@ -8,7 +8,13 @@ export {
     deletePart,
     updatePart,
     setPartsGridLoading,
+    setPartOverlayLoading,
 } from "../parts/partActions";
+
+export {
+    getOperations,
+    setOperationsGridLoading,
+} from "../operations/operationActions";
 
 export {
     setOverlay,

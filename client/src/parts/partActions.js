@@ -3,7 +3,7 @@ import axios from "axios";
 import { NotificationManager } from 'react-notifications';
 
 // Types
-import { GET_PARTS, SET_PARTS_GRID_LOADING } from "./partTypes";
+import { GET_PARTS, SET_PARTS_GRID_LOADING, SET_PART_OVERLAY_LOADING, CONVERT_PART_MODEL_FILE } from "./partTypes";
 
 // Actions
 import { setOverlay } from "../store";
@@ -18,6 +18,13 @@ export const setParts = (payload) => {
 export const setPartsGridLoading = (payload) => {
     return {
         type: SET_PARTS_GRID_LOADING,
+        payload,
+    }
+}
+
+export const setPartOverlayLoading = (payload) => {
+    return {
+        type: SET_PART_OVERLAY_LOADING,
         payload,
     }
 }
@@ -64,6 +71,9 @@ export const addPart = (payload) => {
                 NotificationManager.error(err.response.data.message, 'Error', 3000);
                 dispatch(setPartsGridLoading(false));
             })
+            .finally(() => {
+                dispatch(setPartOverlayLoading(false));
+            });
     }
 }
 
@@ -82,15 +92,29 @@ export const deletePart = (id) => {
             .catch(err => {
                 NotificationManager.error(err.response.data.message, 'Error', 3000);
             })
-            .finally(() => {
-                dispatch(setPartsGridLoading(false));
-            });
     }
 }
 
-export const updatePart = (payload) => {
+export const updatePart = (payload, formData) => {
     return (dispatch, getState) => {
         let url = `${process.env.REACT_APP_API_URL}/part/update`;
+        axios
+            .put(url, payload)
+            .then(response => {
+                if (response.status === 200) {
+                    dispatch(updatePartModelFile(formData))
+                }
+            })
+            .catch(err => {
+                dispatch(setPartOverlayLoading(false));
+                NotificationManager.error(err.response.data.message, 'Error', 3000);
+            })
+    }
+}
+
+export const updatePartModelFile = (payload) => {
+    return (dispatch, getState) => {
+        let url = `${process.env.REACT_APP_API_URL}/part/updateModelFile`;
         axios
             .put(url, payload)
             .then(response => {
@@ -102,6 +126,9 @@ export const updatePart = (payload) => {
             })
             .catch(err => {
                 NotificationManager.error(err.response.data.message, 'Error', 3000);
+            })
+            .finally(() => {
+                dispatch(setPartOverlayLoading(false));
             })
     }
 }

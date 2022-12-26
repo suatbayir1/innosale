@@ -6,10 +6,12 @@ import authReducer from "../auth/authReducer";
 import partReducer from "../parts/partReducer";
 import sharedReducer from "../shared/sharedReducer"
 import nlpReducer from "../nlp/nlpReducer";
+import operationReducer from "../operations/operationReducer";
 
 const rootReducer = combineReducers({
     auth: authReducer,
     part: partReducer,
+    operation: operationReducer,
     shared: sharedReducer,
     nlp: nlpReducer,
 });

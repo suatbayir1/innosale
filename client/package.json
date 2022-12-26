@@ -25,6 +25,7 @@
     "@syncfusion/ej2-react-richtexteditor": "*",
     "@syncfusion/ej2-react-schedule": "*",
     "axios": "^1.1.3",
+    "buffer": "^6.0.3",
     "dayjs": "^1.11.6",
     "dotenv": "^16.0.3",
     "material-ui-dropzone": "^3.5.0",

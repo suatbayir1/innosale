@@ -18,3 +18,6 @@ export { default as PartModel } from '../parts/containers/PartModel';
 export { default as Parts } from '../parts/containers/Parts';
 export { default as AudioFiles } from '../nlp/containers/AudioFiles';
 export { default as AudioPlayer } from '../nlp/containers/AudioPlayer';
+export { default as Operations } from '../operations/containers/Operations';
+export { default as Offers } from '../offers/containers/Offers';
+export { default as OfferDetail } from '../offers/containers/OfferDetail';
