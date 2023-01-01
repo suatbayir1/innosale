@@ -1,6 +1,6 @@
 import InputSlider from "../../components/Slider";
 import { Fab, Stack } from "@mui/material";
-import SummarizeSettingSelect from "../../components/SummarizeSettingSelect";
+import SummarizeSettingSelect from "../../components/Selector";
 import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded';
 
 export default function entities (name_, freq_) {

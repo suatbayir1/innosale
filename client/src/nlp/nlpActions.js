@@ -3,7 +3,7 @@ import axios from "axios";
 import { NotificationManager } from 'react-notifications';
 
 // Types
-import { UPLOAD_AUDIO_LOADING, SET_AUDIOS } from "./nlpTypes";
+import { UPLOAD_AUDIO_LOADING, SET_AUDIOS, SUMMARIZE_SETTINGS } from "./nlpTypes";
 
 // Actions
 import { setOverlay } from "../store/index";
@@ -18,6 +18,13 @@ export const setAudios = (payload) => {
 export const setUploadAudioLoading = (payload) => {
     return {
         type: UPLOAD_AUDIO_LOADING,
+        payload,
+    }
+}
+
+export const setSummarizeSettings = (payload) => {
+    return {
+        type: SUMMARIZE_SETTINGS,
         payload,
     }
 }
@@ -99,6 +106,50 @@ export const updateAudio = (payload) => {
             .finally(() => {
                 dispatch(setUploadAudioLoading(false));
             });
+    }
+}
 
+export const saveSettings = (payload) => {
+    return () => {
+        let url = `${process.env.REACT_APP_BASE_SERVER_URL1}/api/v1/spacy/db_insert_settings`
+        axios
+            .post(url, payload)
+            .then(response => {
+                console.log(response)
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+}
+
+export const updateSettings = (payload) => {
+    return () => {
+        let url = `${process.env.REACT_APP_BASE_SERVER_URL1}/api/v1/spacy/db_update_settings`
+        axios
+            .post(url, payload)
+            .then(response => {
+                console.log(response)
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+}
+
+export const getAllSettings = () => {
+    return (dispatch) => {
+        const results = [];
+        let url = `${process.env.REACT_APP_BASE_SERVER_URL1}/api/v1/spacy/db_get_all_settings`
+        axios
+            .get(url)
+            .then(response => {
+                dispatch(setSummarizeSettings(response.data.data))
+                console.log(response)
+            })
+            .catch(err => {
+                dispatch(setSummarizeSettings([]))
+                console.log(err);
+            })
     }
 }

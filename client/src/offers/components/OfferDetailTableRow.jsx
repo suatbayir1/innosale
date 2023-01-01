@@ -26,7 +26,9 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
+import { FiBarChart, FiCreditCard, FiStar, FiShoppingCart } from 'react-icons/fi';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import BlindIcon from '@mui/icons-material/Blind';
 
 // Components
 import { Header } from '../../components';
@@ -44,6 +46,15 @@ class OfferDetailTableRow extends Component {
     render() {
         const { open } = this.state;
         const { row } = this.props;
+
+        let item = {
+            icon: <FiShoppingCart />,
+            amount: '-$560',
+            title: 'Top Sales',
+            desc: 'Johnathan Doe',
+            iconBg: '#FB9678',
+            pcColor: 'red-600',
+        };
 
         return (
             <React.Fragment>
@@ -225,14 +236,190 @@ class OfferDetailTableRow extends Component {
                                                 aria-controls="panel1a-content"
                                                 id="panel1a-header"
                                             >
-                                                <ExpandMoreIcon />
-                                                <p className="text-lg text-gray-700">FORM VERME</p>
+                                                <Grid container spacing={2} style={{ marginTop: '20px' }}>
+                                                    <Grid item xs={2} md={2}>
+                                                        <div className="flex gap-4">
+                                                            <BlindIcon className='text-2xl' color='error' />
+                                                            <p className="text-lg text-gray-700">FORM VERME</p>
+                                                        </div>
+                                                    </Grid>
+                                                    <Grid item xs={2} md={2}>
+                                                        <div className="flex gap-4">
+                                                            <button
+                                                                type="button"
+                                                                style={{ background: item.iconBg }}
+                                                                className="text-2xl hover:drop-shadow-xl text-white rounded-full p-3"
+                                                            >
+                                                                {item.icon}
+                                                            </button>
+                                                            <div>
+                                                                <p className="text-md font-semibold">K value</p>
+                                                                <p className="text-sm text-gray-400">0.5</p>
+                                                            </div>
+                                                        </div>
+                                                    </Grid>
+                                                    <Grid item xs={2} md={2}>
+                                                        <div className="flex gap-4">
+                                                            <button
+                                                                type="button"
+                                                                style={{ background: item.iconBg }}
+                                                                className="text-2xl hover:drop-shadow-xl text-white rounded-full p-3"
+                                                            >
+                                                                {item.icon}
+                                                            </button>
+                                                            <div>
+                                                                <p className="text-md font-semibold">Packaging</p>
+                                                                <p className="text-sm text-gray-400">1400</p>
+                                                            </div>
+                                                        </div>
+                                                    </Grid>
+                                                </Grid>
+
                                             </AccordionSummary>
                                             <AccordionDetails>
-                                                <Typography>
-                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                                                    malesuada lacus ex, sit amet blandit leo lobortis eget.
-                                                </Typography>
+                                                <Grid container spacing={2}>
+                                                    <Grid item xs={8} md={8}>
+                                                        <Grid container spacing={2}>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">RL</p>
+                                                                    <p className="text-sm text-gray-400">T</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">Presler</p>
+                                                                    <p className="text-sm text-gray-400">160T;ZTS;03.004.0026</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">Kalıp Boyut X</p>
+                                                                    <p className="text-sm text-gray-400">400</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">Kalıp Boyut Y</p>
+                                                                    <p className="text-sm text-gray-400">300</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">Doluluk</p>
+                                                                    <p className="text-sm text-gray-400">0,5</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">Euro Kg</p>
+                                                                    <p className="text-sm text-gray-400">1,8</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">Kalıp Ağırlık</p>
+                                                                    <p className="text-sm text-gray-400">586</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">CAD</p>
+                                                                    <p className="text-sm text-gray-400">49</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">CAM</p>
+                                                                    <p className="text-sm text-gray-400">49</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">2D</p>
+                                                                    <p className="text-sm text-gray-400">12</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">BCNC</p>
+                                                                    <p className="text-sm text-gray-400">49</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">KCNC</p>
+                                                                    <p className="text-sm text-gray-400">493</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">GCNC</p>
+                                                                    <p className="text-sm text-gray-400">3423</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">MONTAJ</p>
+                                                                    <p className="text-sm text-gray-400">67</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">DNM</p>
+                                                                    <p className="text-sm text-gray-400">56</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">ÖLÇÜM</p>
+                                                                    <p className="text-sm text-gray-400">16</p>
+                                                                </div>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Grid>
+
+                                                    <Grid item xs={4} md={4}>
+                                                        <Grid container spacing={2}>
+                                                            <Grid item xs={4} md={4}>
+                                                                <div className="flex gap-4">
+                                                                    <BlindIcon className='text-2xl' color='error' />
+                                                                    <p className="text-lg text-gray-700">10065</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={4} md={4}>
+                                                                <div className="flex gap-4">
+                                                                    <BlindIcon className='text-2xl' color='error' />
+                                                                    <p className="text-lg text-gray-700">500</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={4} md={4}>
+                                                                <div className="flex gap-4">
+                                                                    <BlindIcon className='text-2xl' color='error' />
+                                                                    <p className="text-lg text-gray-700">500</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={4} md={4}>
+                                                                <div className="flex gap-4">
+                                                                    <BlindIcon className='text-2xl' color='error' />
+                                                                    <p className="text-lg text-gray-700">10065</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={4} md={4}>
+                                                                <div className="flex gap-4">
+                                                                    <BlindIcon className='text-2xl' color='error' />
+                                                                    <p className="text-lg text-gray-700">500</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={4} md={4}>
+                                                                <div className="flex gap-4">
+                                                                    <BlindIcon className='text-2xl' color='error' />
+                                                                    <p className="text-lg text-gray-700">500</p>
+                                                                </div>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Grid>
                                             </AccordionDetails>
                                         </Accordion>
                                     </Grid>
@@ -243,13 +430,190 @@ class OfferDetailTableRow extends Component {
                                                 aria-controls="panel1a-content"
                                                 id="panel1a-header"
                                             >
-                                                <p className="text-lg text-gray-700">ÇEVRE KESME & DELME</p>
+                                                <Grid container spacing={2} style={{ marginTop: '20px' }}>
+                                                    <Grid item xs={2} md={2}>
+                                                        <div className="flex gap-4">
+                                                            <BlindIcon className='text-2xl' color='error' />
+                                                            <p className="text-lg text-gray-700">ÇEVRE KESME & DELME</p>
+                                                        </div>
+                                                    </Grid>
+                                                    <Grid item xs={2} md={2}>
+                                                        <div className="flex gap-4">
+                                                            <button
+                                                                type="button"
+                                                                style={{ background: item.iconBg }}
+                                                                className="text-2xl hover:drop-shadow-xl text-white rounded-full p-3"
+                                                            >
+                                                                {item.icon}
+                                                            </button>
+                                                            <div>
+                                                                <p className="text-md font-semibold">K value</p>
+                                                                <p className="text-sm text-gray-400">0.5</p>
+                                                            </div>
+                                                        </div>
+                                                    </Grid>
+                                                    <Grid item xs={2} md={2}>
+                                                        <div className="flex gap-4">
+                                                            <button
+                                                                type="button"
+                                                                style={{ background: item.iconBg }}
+                                                                className="text-2xl hover:drop-shadow-xl text-white rounded-full p-3"
+                                                            >
+                                                                {item.icon}
+                                                            </button>
+                                                            <div>
+                                                                <p className="text-md font-semibold">Packaging</p>
+                                                                <p className="text-sm text-gray-400">1400</p>
+                                                            </div>
+                                                        </div>
+                                                    </Grid>
+                                                </Grid>
+
                                             </AccordionSummary>
                                             <AccordionDetails>
-                                                <Typography>
-                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                                                    malesuada lacus ex, sit amet blandit leo lobortis eget.
-                                                </Typography>
+                                                <Grid container spacing={2}>
+                                                    <Grid item xs={8} md={8}>
+                                                        <Grid container spacing={2}>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">RL</p>
+                                                                    <p className="text-sm text-gray-400">T</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">Presler</p>
+                                                                    <p className="text-sm text-gray-400">160T;ZTS;03.004.0026</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">Kalıp Boyut X</p>
+                                                                    <p className="text-sm text-gray-400">400</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">Kalıp Boyut Y</p>
+                                                                    <p className="text-sm text-gray-400">300</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">Doluluk</p>
+                                                                    <p className="text-sm text-gray-400">0,5</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">Euro Kg</p>
+                                                                    <p className="text-sm text-gray-400">1,8</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">Kalıp Ağırlık</p>
+                                                                    <p className="text-sm text-gray-400">586</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">CAD</p>
+                                                                    <p className="text-sm text-gray-400">49</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">CAM</p>
+                                                                    <p className="text-sm text-gray-400">49</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">2D</p>
+                                                                    <p className="text-sm text-gray-400">12</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">BCNC</p>
+                                                                    <p className="text-sm text-gray-400">49</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">KCNC</p>
+                                                                    <p className="text-sm text-gray-400">493</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">GCNC</p>
+                                                                    <p className="text-sm text-gray-400">3423</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">MONTAJ</p>
+                                                                    <p className="text-sm text-gray-400">67</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">DNM</p>
+                                                                    <p className="text-sm text-gray-400">56</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">ÖLÇÜM</p>
+                                                                    <p className="text-sm text-gray-400">16</p>
+                                                                </div>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Grid>
+
+                                                    <Grid item xs={4} md={4}>
+                                                        <Grid container spacing={2}>
+                                                            <Grid item xs={4} md={4}>
+                                                                <div className="flex gap-4">
+                                                                    <BlindIcon className='text-2xl' color='error' />
+                                                                    <p className="text-lg text-gray-700">10065</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={4} md={4}>
+                                                                <div className="flex gap-4">
+                                                                    <BlindIcon className='text-2xl' color='error' />
+                                                                    <p className="text-lg text-gray-700">500</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={4} md={4}>
+                                                                <div className="flex gap-4">
+                                                                    <BlindIcon className='text-2xl' color='error' />
+                                                                    <p className="text-lg text-gray-700">500</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={4} md={4}>
+                                                                <div className="flex gap-4">
+                                                                    <BlindIcon className='text-2xl' color='error' />
+                                                                    <p className="text-lg text-gray-700">10065</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={4} md={4}>
+                                                                <div className="flex gap-4">
+                                                                    <BlindIcon className='text-2xl' color='error' />
+                                                                    <p className="text-lg text-gray-700">500</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={4} md={4}>
+                                                                <div className="flex gap-4">
+                                                                    <BlindIcon className='text-2xl' color='error' />
+                                                                    <p className="text-lg text-gray-700">500</p>
+                                                                </div>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Grid>
                                             </AccordionDetails>
                                         </Accordion>
                                     </Grid>
@@ -260,13 +624,190 @@ class OfferDetailTableRow extends Component {
                                                 aria-controls="panel1a-content"
                                                 id="panel1a-header"
                                             >
-                                                <p className="text-lg text-gray-700">KONTROL FİKSTÜRÜ (GELENEKSEL)</p>
+                                                <Grid container spacing={2} style={{ marginTop: '20px' }}>
+                                                    <Grid item xs={2} md={2}>
+                                                        <div className="flex gap-4">
+                                                            <BlindIcon className='text-2xl' color='error' />
+                                                            <p className="text-lg text-gray-700">KONTROL FİKSTÜRÜ (GELENEKSEL)</p>
+                                                        </div>
+                                                    </Grid>
+                                                    <Grid item xs={2} md={2}>
+                                                        <div className="flex gap-4">
+                                                            <button
+                                                                type="button"
+                                                                style={{ background: item.iconBg }}
+                                                                className="text-2xl hover:drop-shadow-xl text-white rounded-full p-3"
+                                                            >
+                                                                {item.icon}
+                                                            </button>
+                                                            <div>
+                                                                <p className="text-md font-semibold">K value</p>
+                                                                <p className="text-sm text-gray-400">0.5</p>
+                                                            </div>
+                                                        </div>
+                                                    </Grid>
+                                                    <Grid item xs={2} md={2}>
+                                                        <div className="flex gap-4">
+                                                            <button
+                                                                type="button"
+                                                                style={{ background: item.iconBg }}
+                                                                className="text-2xl hover:drop-shadow-xl text-white rounded-full p-3"
+                                                            >
+                                                                {item.icon}
+                                                            </button>
+                                                            <div>
+                                                                <p className="text-md font-semibold">Packaging</p>
+                                                                <p className="text-sm text-gray-400">1400</p>
+                                                            </div>
+                                                        </div>
+                                                    </Grid>
+                                                </Grid>
+
                                             </AccordionSummary>
                                             <AccordionDetails>
-                                                <Typography>
-                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                                                    malesuada lacus ex, sit amet blandit leo lobortis eget.
-                                                </Typography>
+                                                <Grid container spacing={2}>
+                                                    <Grid item xs={8} md={8}>
+                                                        <Grid container spacing={2}>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">RL</p>
+                                                                    <p className="text-sm text-gray-400">T</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">Presler</p>
+                                                                    <p className="text-sm text-gray-400">160T;ZTS;03.004.0026</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">Kalıp Boyut X</p>
+                                                                    <p className="text-sm text-gray-400">400</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">Kalıp Boyut Y</p>
+                                                                    <p className="text-sm text-gray-400">300</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">Doluluk</p>
+                                                                    <p className="text-sm text-gray-400">0,5</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">Euro Kg</p>
+                                                                    <p className="text-sm text-gray-400">1,8</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">Kalıp Ağırlık</p>
+                                                                    <p className="text-sm text-gray-400">586</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">CAD</p>
+                                                                    <p className="text-sm text-gray-400">49</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">CAM</p>
+                                                                    <p className="text-sm text-gray-400">49</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">2D</p>
+                                                                    <p className="text-sm text-gray-400">12</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">BCNC</p>
+                                                                    <p className="text-sm text-gray-400">49</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">KCNC</p>
+                                                                    <p className="text-sm text-gray-400">493</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">GCNC</p>
+                                                                    <p className="text-sm text-gray-400">3423</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">MONTAJ</p>
+                                                                    <p className="text-sm text-gray-400">67</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">DNM</p>
+                                                                    <p className="text-sm text-gray-400">56</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={2} md={2}>
+                                                                <div>
+                                                                    <p className="text-md font-semibold">ÖLÇÜM</p>
+                                                                    <p className="text-sm text-gray-400">16</p>
+                                                                </div>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Grid>
+
+                                                    <Grid item xs={4} md={4}>
+                                                        <Grid container spacing={2}>
+                                                            <Grid item xs={4} md={4}>
+                                                                <div className="flex gap-4">
+                                                                    <BlindIcon className='text-2xl' color='error' />
+                                                                    <p className="text-lg text-gray-700">10065</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={4} md={4}>
+                                                                <div className="flex gap-4">
+                                                                    <BlindIcon className='text-2xl' color='error' />
+                                                                    <p className="text-lg text-gray-700">500</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={4} md={4}>
+                                                                <div className="flex gap-4">
+                                                                    <BlindIcon className='text-2xl' color='error' />
+                                                                    <p className="text-lg text-gray-700">500</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={4} md={4}>
+                                                                <div className="flex gap-4">
+                                                                    <BlindIcon className='text-2xl' color='error' />
+                                                                    <p className="text-lg text-gray-700">10065</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={4} md={4}>
+                                                                <div className="flex gap-4">
+                                                                    <BlindIcon className='text-2xl' color='error' />
+                                                                    <p className="text-lg text-gray-700">500</p>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={4} md={4}>
+                                                                <div className="flex gap-4">
+                                                                    <BlindIcon className='text-2xl' color='error' />
+                                                                    <p className="text-lg text-gray-700">500</p>
+                                                                </div>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Grid>
                                             </AccordionDetails>
                                         </Accordion>
                                     </Grid>

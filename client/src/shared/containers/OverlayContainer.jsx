@@ -7,6 +7,7 @@ import AudioFileOverlay from '../../nlp/overlays/AudioFileOverlay';
 import PartOverlay from '../../parts/overlays/PartOverlay';
 import DetailOffer from '../../offers/overlays/DetailOffer';
 import ConfirmationDialog from '../../components/ConfirmationDialogClass';
+import OfferOverlay from '../../offers/overlays/OfferOverlay';
 
 // Actions
 import { setOverlay } from "../../store/index";
@@ -22,6 +23,8 @@ class OverlayContainer extends Component {
                 return <PartOverlay />
             case 'detail-offer':
                 return <DetailOffer />
+            case 'add-offer':
+                return <OfferOverlay />
             case 'summarize-settings':
                 return <ConfirmationDialog />
             default: return null

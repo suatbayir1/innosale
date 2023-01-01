@@ -3,7 +3,7 @@ import { Fab, Stack } from "@mui/material";
 import BasicTextFields from "../../components/TextField";
 import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded';
 
-export default function importantWord (word_, freq_) {
+export default function ImportantWord (word_, freq_) {
     let word = word_;
     let freq = freq_;
 

@@ -22,9 +22,13 @@ export {
 } from "../shared/sharedActions";
 
 export {
+    setSummarizeSettings,
     getAllAudios,
     uploadAudioFile,
     deleteAudioFile,
     setUploadAudioLoading,
     updateAudio,
+    saveSettings,
+    updateSettings,
+    getAllSettings
 } from "../nlp/nlpActions";

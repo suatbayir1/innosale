@@ -35,6 +35,14 @@ class Offers extends Component {
         }
     }
 
+    add = () => {
+        const { setOverlay, setDialogData } = this.props;
+
+        setOverlay("add-offer")
+        setDialogData({ "mode": "add", "title": "Add Offer", "data": {} });
+    }
+
+
     CustomToolbar = () => {
         const { selected } = this.state;
 
