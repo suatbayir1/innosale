@@ -1,4 +1,5 @@
 export const GET_PARTS = "GET_PARTS";
+export const GET_PARTS_BY_OFFER_ID = "GET_PARTS_BY_OFFER_ID";
 export const ADD_PART = "ADD_PART";
 export const UPDATE_PART = "UPDATE_PART";
 export const DELETE_PART = "DELETE_PART";

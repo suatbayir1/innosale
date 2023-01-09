@@ -13,11 +13,14 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import BasicTextFields from './TextField';
+import { maxHeight } from '@mui/system';
 
 export default function SaveSettingDialog(props) {
+    const { saveSettingName, selectedRadio } = props
+
     const [open, setOpen] = React.useState(false);
-    const [radioValue, setRadioValue] = React.useState("edit");
-    const [saveName, setSaveName] = React.useState(props.name);
+    //const [radioValue, setRadioValue] = React.useState("edit");
+    //const [saveName, setSaveName] = React.useState(props.name);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -27,23 +30,22 @@ export default function SaveSettingDialog(props) {
         setOpen(false);
     };
 
-    const handleInputChange = (event) => {
-        setSaveName(event.target.value)
-        props.handleBlockChanges("settingName", event.target.value)
-    }
-
     const handleSaveClick = () => {
-        props.save(radioValue)
+        props.save(selectedRadio)
+        window.location.reload(true)
+        window.location.reload(true)
+        
     }
 
     return (
         <div>
             <Button
-                variant="contained"
+                variant="outlined"
                 startIcon={<SaveOutlinedIcon />}
-                style={{ textTransform: 'none' }}
-                color="primary"
+                style={{ textTransform: 'none', height: '56px' }}
+                color="success"
                 onClick={handleClickOpen}
+
             >
                 Save Settings
             </Button>
@@ -52,23 +54,26 @@ export default function SaveSettingDialog(props) {
                 <DialogTitle>Save Settings</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        To subscribe to this website, please enter your email address here. We
-                        will send updates occasionally.
+                        Please enter the save name, choose the save type and click 'Save' button.
                     </DialogContentText>
                     <BasicTextFields
-                        title="Setting Name"
-                        value={saveName}
-                        name={"settingName"}
-                        handleInputChange={handleInputChange}
+                        title = "Setting Name"
+                        value = {saveSettingName}
+                        name = "saveSettingName"
+                        handleInputChange = {(name, value) => {
+                            props.handleBlockChanges(name, value)
+                        }}
                     />
                     <FormControl>
                         <FormLabel id="demo-radio-buttons-group-label">Save Type</FormLabel>
                         <RadioGroup
                             aria-labelledby="demo-radio-buttons-group-label"
                             defaultValue="edit"
-                            name="row-radio-buttons-group"
-                            value={radioValue}
-                            onChange={(event) => {setRadioValue(event.target.value)}}
+                            name="selectedRadio"
+                            value={selectedRadio}
+                            onChange={(event) => {
+                                props.handleBlockChanges(event.target.name, event.target.value)
+                            }}
                         >
                             <FormControlLabel value="edit" control={<Radio />} label="Overwrite" />
                             <FormControlLabel value="new" control={<Radio />} label="Create New" />

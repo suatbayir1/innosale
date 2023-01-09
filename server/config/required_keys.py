@@ -12,6 +12,11 @@ operation = dict(
     ]
 )
 
+offer = dict(
+    add = ["companyName", "date", "description"],
+    update = [],
+)
+
 transcribe_results = dict(
     add = [
         "hash", "sound_len", "tiny_time", "tiny_result",

@@ -3,10 +3,10 @@ import axios from "axios";
 import { NotificationManager } from 'react-notifications';
 
 // Types
-import { GET_PARTS, SET_PARTS_GRID_LOADING, SET_PART_OVERLAY_LOADING, CONVERT_PART_MODEL_FILE } from "./partTypes";
+import { GET_PARTS, SET_PARTS_GRID_LOADING, SET_PART_OVERLAY_LOADING, GET_PARTS_BY_OFFER_ID } from "./partTypes";
 
 // Actions
-import { setOverlay } from "../store";
+import { setOverlay, setOfferDetailPageLoading } from "../store";
 
 export const setParts = (payload) => {
     return {
@@ -14,6 +14,14 @@ export const setParts = (payload) => {
         payload,
     }
 }
+
+export const setPart = (payload) => {
+    return {
+        type: GET_PARTS_BY_OFFER_ID,
+        payload,
+    }
+}
+
 
 export const setPartsGridLoading = (payload) => {
     return {
@@ -46,11 +54,35 @@ export const getParts = () => {
                 }
             })
             .catch(err => {
+                dispatch(setParts({
+                    result: [],
+                    count: 0
+                }));
                 NotificationManager.error(err.response.data.message, 'Error', 3000);
             })
             .finally(() => {
                 dispatch(setPartsGridLoading(false));
             });
+    }
+}
+
+export const getPartsByOfferId = (id) => {
+    return (dispatch, getState) => {
+        let url = `${process.env.REACT_APP_API_URL}/part/getPartsByOfferId/${id}`;
+        axios
+            .get(url)
+            .then(response => {
+                if (response.status === 200) {
+                    dispatch(setPart(response.data.data));
+                }
+            })
+            .catch(err => {
+                NotificationManager.error(err.response.data.message, 'Error', 3000);
+                dispatch(setPart([]));
+            })
+            .finally(() => {
+                dispatch(setOfferDetailPageLoading(false));
+            })
     }
 }
 
@@ -60,11 +92,11 @@ export const addPart = (payload) => {
         axios
             .post(url, payload)
             .then(response => {
-                console.log(response)
                 if (response.status === 200) {
                     NotificationManager.success(response.data.message, 'Successfull', 3000);
                     dispatch(setOverlay('none'));
                     dispatch(getParts());
+                    dispatch(getPartsByOfferId(payload.get("teklif_id")))
                 }
             })
             .catch(err => {

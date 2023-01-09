@@ -50,13 +50,13 @@ export const links = [
                 routes: ["offers", "offer-detail"]
             },
             {
-                name: 'Parts',
+                name: 'All Parts',
                 path: 'parts',
                 icon: <GrProductHunt />,
                 routes: ["parts"]
             },
             {
-                name: 'Operations',
+                name: 'All Operations',
                 path: 'operations',
                 icon: <GrProductHunt />,
                 routes: ["operations"]

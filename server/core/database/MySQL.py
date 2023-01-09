@@ -98,3 +98,15 @@ class MySQL():
         except Exception as e:
             return [e, 500]
     
+    def select_by_key_value(self, table_name, key, value):
+        try:
+            sql = f"SELECT * FROM {table_name} WHERE {key} = %s"
+            self.cursor.execute(sql, value)
+            fields = [field[0] for field in self.cursor.description]
+            result = [dict(zip(fields, row)) for row in self.cursor.fetchall()]
+            print(result)
+            if not result:
+                return [], 200
+            return result, 200
+        except Exception as e:
+            return [e, 500]

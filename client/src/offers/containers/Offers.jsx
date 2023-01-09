@@ -7,7 +7,6 @@ import { DataGrid, GridToolbar, GridToolbarContainer } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { Link } from 'react-router-dom';
-import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
@@ -15,8 +14,11 @@ import NorthEastIcon from '@mui/icons-material/NorthEast';
 // Components
 import { Header } from '../../components';
 
+// Helpers
+import { dateToTableFormatWithDot } from "../../shared/helpers/convert";
+
 // Actions
-import { setOverlay, setDialogData } from "../../store/index";
+import { setOverlay, setDialogData, getOffers } from "../../store/index";
 
 const styles = theme => ({
     root: {
@@ -31,8 +33,15 @@ class Offers extends Component {
         super(props);
 
         this.state = {
+            pageSize: 5,
             selected: [],
         }
+    }
+
+    componentDidMount() {
+        const { getOffers } = this.props;
+
+        getOffers();
     }
 
     add = () => {
@@ -42,9 +51,22 @@ class Offers extends Component {
         setDialogData({ "mode": "add", "title": "Add Offer", "data": {} });
     }
 
+    edit = () => {
+        const { selected } = this.state;
+        const { setOverlay, setDialogData, offers } = this.props;
+
+        const selectedOffer = offers?.result.find(offer => offer.id === selected[0]);
+
+        setOverlay("add-offer");
+        setDialogData({ "mode": "edit", "title": "Edit Offer", "data": selectedOffer });
+    }
+
 
     CustomToolbar = () => {
         const { selected } = this.state;
+        const { offers } = this.props;
+
+        const selectedOffer = offers?.result.find(offer => offer.id === selected[0]);
 
         return (
             <GridToolbarContainer>
@@ -74,7 +96,7 @@ class Offers extends Component {
                     >
                         DELETE
                     </Button>
-                    <Link to={selected.length === 1 ? "/offer-detail/1" : "#"}>
+                    <Link to={selected.length === 1 ? `/offer-detail/${selectedOffer.id}` : "#"}>
                         <Button
                             startIcon={<NorthEastIcon />}
                             disabled={selected.length === 1 ? false : true}
@@ -90,8 +112,8 @@ class Offers extends Component {
     }
 
     render() {
-        const { openConfirmationDialog, confirmationMessage, pageSize, selected } = this.state;
-        const { parts, partsGridLoading, classes } = this.props;
+        const { pageSize, selected } = this.state;
+        const { offersGridLoading, classes, offers } = this.props;
 
         const columns = [
             {
@@ -100,7 +122,7 @@ class Offers extends Component {
                 width: 70
             },
             {
-                field: 'company',
+                field: 'company_name',
                 headerName: 'Company Name',
                 width: 300
             },
@@ -113,41 +135,10 @@ class Offers extends Component {
                 field: 'date',
                 headerName: 'Date',
                 width: '300',
+                valueGetter: (params) =>
+                    `${dateToTableFormatWithDot(params.row.date) || ''}`,
             },
         ];
-
-        const data = [
-            {
-                id: 1,
-                company: "Sales Case Company Name",
-                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry",
-                date: "10.12.2022"
-            },
-            {
-                id: 2,
-                company: "Sales Case Company Name",
-                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry",
-                date: "10.12.2022"
-            },
-            {
-                id: 3,
-                company: "Sales Case Company Name",
-                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry",
-                date: "10.12.2022"
-            },
-            {
-                id: 4,
-                company: "Sales Case Company Name",
-                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry",
-                date: "10.12.2022"
-            },
-            {
-                id: 5,
-                company: "Sales Case Company Name",
-                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry",
-                date: "10.12.2022"
-            },
-        ]
 
         return (
             <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
@@ -155,7 +146,7 @@ class Offers extends Component {
                 <Box sx={{ height: 400, width: '100%' }} mt={2}>
                     <DataGrid
                         className={classes.root}
-                        rows={data}
+                        rows={offers?.result || []}
                         columns={columns}
                         disableSelectionOnClick
                         components={{ Toolbar: this.CustomToolbar }}
@@ -163,7 +154,7 @@ class Offers extends Component {
                         onPageSizeChange={(pageSize) => this.setState({ pageSize })}
                         rowsPerPageOptions={[5, 10, 20]}
                         pagination
-                        loading={partsGridLoading}
+                        loading={offersGridLoading}
                         checkboxSelection
                         hideFooterSelectedRowCount
                         selectionModel={selected}
@@ -186,6 +177,8 @@ class Offers extends Component {
 
 const mstp = (state) => {
     return {
+        offers: state.offer.offers,
+        offersGridLoading: state.offer.offersGridLoading,
     }
 }
 
@@ -193,6 +186,7 @@ const mdtp = (dispatch) => {
     return {
         setOverlay: (payload) => dispatch(setOverlay(payload)),
         setDialogData: (payload) => dispatch(setDialogData(payload)),
+        getOffers: () => dispatch(getOffers())
     }
 }
 

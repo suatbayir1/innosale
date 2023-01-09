@@ -87,7 +87,7 @@ tables = [
             )
         """
     },
-        {
+    {
         "name": "audios",
         "sql": """
             CREATE TABLE IF NOT EXISTS audios (
@@ -99,8 +99,20 @@ tables = [
                 updatedAt DATETIME ON UPDATE CURRENT_TIMESTAMP
             )
         """
-    }
-    
+    },
+    {
+        "name": "offers",
+        "sql": """
+            CREATE TABLE IF NOT EXISTS offers (
+                id int not null primary key auto_increment,
+                company_name varchar(255),
+                date date,
+                description text,
+                createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updatedAt DATETIME ON UPDATE CURRENT_TIMESTAMP
+                )
+        """
+    },
 ]
 
 excel_files = ["ParcaListesi.xlsx", "Operasyonlar.xlsx", "TranscribeResults.xlsx"]

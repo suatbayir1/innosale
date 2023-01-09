@@ -144,3 +144,18 @@ class PartController(FlaskView, Base):
             return self.base.response(message = str(result[0])), result[1]
         except Exception as e:
             return self.base.response(message = e), 500
+
+    @route("/getPartsByOfferId/<offer_id>", methods = ["GET"])
+    def get_parts_by_offer_id(self, offer_id):
+        try:
+            result = self.part_model.get_parts_by_key_value("teklif_id", offer_id)
+            print(result)
+            if not result[0]:
+                print("test")
+                return self.base.response(data = result[0], total_count = len(result[0]), message = "No part records found related with this offer"), result[1]
+
+            return self.base.response(data = result[0], total_count = len(result[0]), message = "Parts successfully fetched by offer id"), result[1]
+        except Exception as e:
+            return self.base.response(message = e), 500
+        finally:
+            pass

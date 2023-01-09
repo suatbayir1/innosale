@@ -23,6 +23,9 @@ import { setOverlay, setDialogData, getAllAudios, deleteAudioFile } from "../../
 import { dateToTableFormat } from "../../shared/helpers/convert";
 import { downloadFile } from "../../shared/helpers/export";
 
+// HOC
+import withRouter from '../../shared/hoc/withRouter';
+
 // Overlays
 import DeleteConfirmationDialog from "../../shared/overlays/DeleteConfirmationDialog";
 
@@ -39,8 +42,14 @@ class AudioFiles extends Component {
     }
 
     componentDidMount() {
-        const { getAllAudios } = this.props;
-        getAllAudios();
+        const { getAllAudios, params } = this.props;
+
+        if (params.id) {
+            // TODO: GET AUDIOS BY OFFER ID
+            console.log("params", params);
+        } else {
+            getAllAudios();
+        }
     }
 
     onAcceptDelete = () => {
@@ -218,4 +227,4 @@ const mdtp = (dispatch) => {
     }
 }
 
-export default connect(mstp, mdtp)(AudioFiles);
+export default withRouter(connect(mstp, mdtp)(AudioFiles));

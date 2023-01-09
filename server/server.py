@@ -12,6 +12,7 @@ from middlewares.Base import Base
 from controllers.PartController import PartController
 from controllers.OperationController import OperationController
 from controllers.FileController import FileController
+from controllers.OfferController import OfferController
 # from helpers import file_converter
 # from controllers.WhisperController import WhisperController
 # from controllers.Similarity3DController import Similarity3DController
@@ -36,6 +37,7 @@ if __name__ == "__main__":
     PartController.register(app, route_base = '/api/v1/part')
     OperationController.register(app, route_base = '/api/v1/operation')
     FileController.register(app, route_base = '/api/v1/file')
+    OfferController.register(app, route_base = '/api/v1/offer')
     # WhisperController.register(app, route_base = '/api/v1/whisper')
     # Similarity3DController.register(app, route_base = '/api/v1/similarity')
     app.run(debug = True, port = 5000, use_reloader = True)

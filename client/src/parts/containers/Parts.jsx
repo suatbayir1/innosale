@@ -15,16 +15,13 @@ import { withStyles } from '@material-ui/core/styles';
 import { Header } from '../../components';
 
 // Actions
-import { setOverlay, setDialogData, deletePart } from "../../store/index";
+import { setOverlay, setDialogData, deletePart, getParts, setPartsGridLoading } from "../../store/index";
 
 // Helpers
 import { dateToTableFormat } from "../../shared/helpers/convert";
 
 // Overlays
 import DeleteConfirmationDialog from "../../shared/overlays/DeleteConfirmationDialog";
-
-// Actions
-import { getParts, setPartsGridLoading } from '../../store/index';
 
 const styles = theme => ({
     root: {

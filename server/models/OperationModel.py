@@ -50,3 +50,14 @@ class OperationModel(Base):
             )
         except Exception as e:
             return [e, 500]
+
+    def get_operations_by_key_value(self, key, value):
+        try:
+            return self.base.mysql.select_by_key_value(
+                table_name = "operations", 
+                key = key,
+                value = [int(value)]
+            )
+            
+        except Exception as e:
+            return [e, 500]

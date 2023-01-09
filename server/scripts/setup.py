@@ -13,6 +13,12 @@ from core.database.MySQL import MySQL
 # Constants
 from scripts import constants
 
+# Entities
+from entities.Part import Part
+
+# Models
+from models.PartModel import PartModel
+
 # Configuration
 load_dotenv()
 
@@ -23,6 +29,7 @@ class Setup():
         self.DATABASE_PASSWORD = os.environ.get('DATABASE_PASSWORD')
         self.DATABASE_NAME = os.environ.get('DATABASE_NAME')
         self.mysql = MySQL(self.DATABASE_HOST, self.DATABASE_USER, self.DATABASE_PASSWORD, self.DATABASE_NAME)
+        self.part_model = PartModel()
 
     def drop_tables(self):
         print("Dropping Tables: ")
@@ -68,7 +75,26 @@ class Setup():
                 "hazirlama_tarihi": row.loc['HAZIRLAMATARIHI'].date().strftime('%Y-%m-%d')
             }
 
-            response = requests.post(f"{os.environ.get('BACKEND_URL')}/part/add", json = payload)
+            part = Part(
+                teklif_no = row.loc['TeklifNo'], 
+                teklif_talep_rev_no = int(row.loc['TeklifTalepRevNo']),
+                teklif_id = int(row.loc['TeklifId']),
+                sac_kalinlik = float(row.loc['SacKalinlik']),
+                sac_cinsi = row.loc['SacCinsi'],
+                net_x = int(row.loc['NetX']),
+                net_y = int(row.loc['NetY']),
+                kontur_boyu = int(row.loc['KonturBoyu']),
+                acinim_yuzey_alani = int(row.loc['AcinimYuzeyAlani']),
+                sac_ts_max = int(row.loc['SacTsMax']),
+                sac_uzama = int(row.loc['SacUzama']),
+                sertlik = row.loc['Sertlik'],
+                hazirlama_tarihi = row.loc['HAZIRLAMATARIHI'].date().strftime('%Y-%m-%d'),
+                model_path = ""
+            )
+
+            result = self.part_model.add(part)
+
+            # response = requests.post(f"{os.environ.get('BACKEND_URL')}/part/add", json = payload)
     
     def insert_operations(self, df):
         print("Operations Inserting...")

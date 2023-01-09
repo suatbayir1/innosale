@@ -3,7 +3,7 @@ import axios from "axios";
 import { NotificationManager } from 'react-notifications';
 
 // Types
-import { UPLOAD_AUDIO_LOADING, SET_AUDIOS, SUMMARIZE_SETTINGS } from "./nlpTypes";
+import { UPLOAD_AUDIO_LOADING, SET_AUDIOS, SUMMARIZE_SETTINGS, SUMMARIZE_RESULT, ENTITY_LIST, SELECTED_SETTING } from "./nlpTypes";
 
 // Actions
 import { setOverlay } from "../store/index";
@@ -25,6 +25,27 @@ export const setUploadAudioLoading = (payload) => {
 export const setSummarizeSettings = (payload) => {
     return {
         type: SUMMARIZE_SETTINGS,
+        payload,
+    }
+}
+
+export const setSummarizeResult = (payload) => {
+    return {
+        type: SUMMARIZE_RESULT,
+        payload,
+    }
+}
+
+export const setEntities = (payload) => {
+    return {
+        type: ENTITY_LIST,
+        payload,
+    }
+}
+
+export const setSetting = (payload) => {
+    return {
+        type: SELECTED_SETTING,
         payload,
     }
 }
@@ -139,7 +160,6 @@ export const updateSettings = (payload) => {
 
 export const getAllSettings = () => {
     return (dispatch) => {
-        const results = [];
         let url = `${process.env.REACT_APP_BASE_SERVER_URL1}/api/v1/spacy/db_get_all_settings`
         axios
             .get(url)
@@ -149,6 +169,70 @@ export const getAllSettings = () => {
             })
             .catch(err => {
                 dispatch(setSummarizeSettings([]))
+                console.log(err);
+            })
+    }
+}
+
+export const getSummarize = (payload) => {
+
+    return (dispatch) => {
+        let url = `${process.env.REACT_APP_BASE_SERVER_URL1}/api/v1/spacy/summarize`
+        axios
+            .post(url, payload)
+            .then(response => {
+                dispatch(setSummarizeResult(response))
+                console.log(response)
+            })
+            .catch(err => {
+                dispatch(setSummarizeResult())
+                console.log(err);
+            })
+    }
+}
+
+export const getEntities = () => {
+    return (dispatch) => {
+        let url = `${process.env.REACT_APP_BASE_SERVER_URL1}/api/v1/spacy/get_all_entities`
+        axios
+            .get(url)
+            .then(response => {
+                dispatch(setEntities(response.data.data.entities))
+                console.log(response)
+            })
+            .catch(err => {
+                dispatch(setEntities([]))
+                console.log(err);
+            })
+    }
+}
+
+export const getSetting = (payload) => {
+
+    return (dispatch) => {
+        let url = `${process.env.REACT_APP_BASE_SERVER_URL1}/api/v1/spacy/db_get_setting`
+        axios
+            .post(url, payload)
+            .then(response => {
+                dispatch(setSetting(response.data.data[0]))
+                console.log(response)
+            })
+            .catch(err => {
+                dispatch(setSetting())
+                console.log(err);
+            })
+    }
+}
+
+export const removeSetting = (payload) => {
+    return () => {
+        let url = `${process.env.REACT_APP_BASE_SERVER_URL1}/api/v1/spacy/db_delete_settings`
+        axios
+            .post(url, payload)
+            .then(response => {
+                console.log(response)
+            })
+            .catch(err => {
                 console.log(err);
             })
     }

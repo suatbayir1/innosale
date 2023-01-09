@@ -9,11 +9,13 @@ export {
     updatePart,
     setPartsGridLoading,
     setPartOverlayLoading,
+    getPartsByOfferId,
 } from "../parts/partActions";
 
 export {
     getOperations,
     setOperationsGridLoading,
+    getOperationsByOfferId,
 } from "../operations/operationActions";
 
 export {
@@ -30,5 +32,19 @@ export {
     updateAudio,
     saveSettings,
     updateSettings,
-    getAllSettings
+    getAllSettings,
+    setSummarizeResult,
+    getSummarize,
+    getEntities,
+    setEntities,
+    getSetting,
+    setSetting,
+    removeSetting
 } from "../nlp/nlpActions";
+
+export {
+    addOffer,
+    updateOffer,
+    getOffers,
+    setOfferDetailPageLoading,
+} from "../offers/offerActions";

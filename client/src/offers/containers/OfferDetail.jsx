@@ -1,30 +1,31 @@
 // Libraries
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from "react-redux";
-import Box from '@mui/material/Box';
-import Collapse from '@mui/material/Collapse';
-import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import FormControl from '@mui/material/FormControl';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import TextField from '@mui/material/TextField';
+import AddIcon from '@mui/icons-material/Add';
 
 // Components
-import { Header, OfferDetailTableRow } from '../../components';
+import { Header, OfferDetailTableRow, EmptyState } from '../../components';
 
+// Actions
+import { setOverlay, setDialogData, getPartsByOfferId, setOfferDetailPageLoading } from "../../store/index";
+
+// HOC
+import withRouter from '../../shared/hoc/withRouter';
+
+// Constants
+import notFoundImage from '../../data/notfound.png'
 
 class OfferDetail extends Component {
     constructor(props) {
@@ -34,113 +35,96 @@ class OfferDetail extends Component {
         }
     }
 
+    componentDidMount = async () => {
+        const { getPartsByOfferId, setOfferDetailPageLoading, params } = this.props;
+        await setOfferDetailPageLoading(true);
+        await getPartsByOfferId(params.id)
+    }
+
+    add = () => {
+        const { setOverlay, setDialogData, params } = this.props;
+
+        setOverlay("add-part")
+        setDialogData({ "mode": "add", "title": "Add Part", "data": { teklif_id: params.id } });
+    }
+
     render() {
-        const rows = [
-            {
-                name: "Frozen Yoghurt",
-                calories: 159,
-                fat: 6.0,
-                carbs: 24,
-                protein: 4.0,
-                price: 3.99,
-                history: [
-                    {
-                        date: '2020-01-05',
-                        customerId: '11091700',
-                        amount: 3,
-                    },
-                    {
-                        date: '2020-01-02',
-                        customerId: 'Anonymous',
-                        amount: 1,
-                    },
-                ]
-            },
-            {
-                name: "Frozen Yoghurt",
-                calories: 159,
-                fat: 6.0,
-                carbs: 24,
-                protein: 4.0,
-                price: 3.99,
-                history: [
-                    {
-                        date: '2020-01-05',
-                        customerId: '11091700',
-                        amount: 3,
-                    },
-                    {
-                        date: '2020-01-02',
-                        customerId: 'Anonymous',
-                        amount: 1,
-                    },
-                ]
-            }, {
-                name: "Frozen Yoghurt",
-                calories: 159,
-                fat: 6.0,
-                carbs: 24,
-                protein: 4.0,
-                price: 3.99,
-                history: [
-                    {
-                        date: '2020-01-05',
-                        customerId: '11091700',
-                        amount: 3,
-                    },
-                    {
-                        date: '2020-01-02',
-                        customerId: 'Anonymous',
-                        amount: 1,
-                    },
-                ]
-            }, {
-                name: "Frozen Yoghurt",
-                calories: 159,
-                fat: 6.0,
-                carbs: 24,
-                protein: 4.0,
-                price: 3.99,
-                history: [
-                    {
-                        date: '2020-01-05',
-                        customerId: '11091700',
-                        amount: 3,
-                    },
-                    {
-                        date: '2020-01-02',
-                        customerId: 'Anonymous',
-                        amount: 1,
-                    },
-                ]
-            },
-        ];
-        const open = true;
+        const { part, operationsByOfferId, params, offerDetailPageLoading } = this.props;
+
+        console.log("offer-detail-part", part);
+        console.log("offer-detail-operation", operationsByOfferId);
+        console.log({ offerDetailPageLoading })
 
         return (
             <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
                 <Header category="Sales Case Company Name" title="Offer Details" />
-                <TableContainer component={Paper}>
-                    <Table aria-label="collapsible table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Teklif No</TableCell>
-                                <TableCell>Teklif Id</TableCell>
-                                <TableCell>Sac Kalınlık</TableCell>
-                                <TableCell>Sac Cinsi</TableCell>
-                                <TableCell>Net X</TableCell>
-                                <TableCell>Net Y</TableCell>
-                                <TableCell>Kontur Boyu</TableCell>
-                                <TableCell />
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {rows.map((row) => (
-                                <OfferDetailTableRow key={row.name} row={row} />
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+
+                {
+                    offerDetailPageLoading ? <Box sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        minHeight: '400px'
+                    }}>
+                        <CircularProgress size={200} thickness={1} />
+                    </Box>
+                        :
+                        <>
+                            {
+                                part.length === 0 ?
+                                    <EmptyState
+                                        minHeight={'50vh'}
+                                        image={notFoundImage}
+                                        primaryMessage={'No asset created yet'}
+                                        secondaryMessage={'No part records related with this offer were found. Create a part now.'}
+                                        buttonClick={() => { this.add() }}
+                                        buttonText={"Create Part"}
+                                    />
+                                    :
+                                    <>
+                                        <Grid container spacing={2} style={{ marginTop: '20px' }}>
+                                            <Grid item xs={2} md={2}>
+                                                <Link to={`/audio-files/${params.id}`}>
+                                                    <Button
+                                                        variant="outlined"
+                                                        startIcon={<AddIcon />}
+                                                        style={{ textTransform: 'none', width: '100%' }}
+                                                        color="primary"
+                                                    >
+                                                        Audio Files
+                                                    </Button>
+                                                </Link>
+                                            </Grid>
+                                        </Grid>
+                                        <Grid container spacing={2} style={{ marginTop: '20px' }}>
+                                            <Grid item xs={12} md={12}>
+                                                <TableContainer component={Paper}>
+                                                    <Table aria-label="collapsible table">
+                                                        <TableHead>
+                                                            <TableRow>
+                                                                <TableCell>Teklif No</TableCell>
+                                                                <TableCell>Teklif Id</TableCell>
+                                                                <TableCell>Sac Kalınlık</TableCell>
+                                                                <TableCell>Sac Cinsi</TableCell>
+                                                                <TableCell>Net X</TableCell>
+                                                                <TableCell>Net Y</TableCell>
+                                                                <TableCell>Kontur Boyu</TableCell>
+                                                                <TableCell />
+                                                            </TableRow>
+                                                        </TableHead>
+                                                        <TableBody>
+                                                            {part.map((row) => (
+                                                                <OfferDetailTableRow key={row.id} row={row} params={params} />
+                                                            ))}
+                                                        </TableBody>
+                                                    </Table>
+                                                </TableContainer>
+                                            </Grid>
+                                        </Grid>
+                                    </>
+                            }
+                        </>
+                }
             </div >
         );
     }
@@ -148,12 +132,18 @@ class OfferDetail extends Component {
 
 const mstp = (state) => {
     return {
+        part: state.part.part,
+        offerDetailPageLoading: state.offer.offerDetailPageLoading,
     }
 }
 
 const mdtp = (dispatch) => {
     return {
+        setOverlay: (payload) => dispatch(setOverlay(payload)),
+        setDialogData: (payload) => dispatch(setDialogData(payload)),
+        getPartsByOfferId: (payload) => dispatch(getPartsByOfferId(payload)),
+        setOfferDetailPageLoading: (payload) => dispatch(setOfferDetailPageLoading(payload)),
     }
 }
 
-export default connect(mstp, mdtp)(OfferDetail);
+export default withRouter(connect(mstp, mdtp)(OfferDetail));

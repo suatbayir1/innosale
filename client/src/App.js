@@ -97,6 +97,7 @@ const App = () => {
 
                 {/* apps  */}
                 <Route path="/audio-files" element={<AudioFiles />} />
+                <Route path="/audio-files/:id" element={<AudioFiles />} />
                 <Route path="/audio-player/:id" element={<AudioPlayer />} />
                 <Route path="/kanban" element={<Kanban />} />
                 <Route path="/editor" element={<Editor />} />

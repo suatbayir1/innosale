@@ -7,62 +7,63 @@ import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded';
 class EntityBlock extends Component {
     constructor(props) {
         super(props);
+    }
 
-        this.state = {
-            entities: props.entities
+    render() {
+        const { entities, entitiesList } = this.props
+
+        const findSelectedEntities = () => {
+            const selectedEntities = [];
+
+            for (let i = 0; i < entities.length; i++) {
+                if (!selectedEntities.includes(entities[i].name)) {
+                    selectedEntities.push(entities[i].name)
+                }
+            }
+
+            return selectedEntities;
         }
-    }
 
-    handleSelectChance = (event) => {
-        const name = event.target.name
-        const split_name = name.split("_")
-        const state_number = Number(split_name[split_name.length - 1])
-
-        const { entities } = this.state
-        entities[state_number].name = String(event.target.value)
-
-        this.setState({
-            entities: entities
-        });
-        this.props.handleBlockChanges("entities", entities)
-    }
-
-    handleSliderChange = (event) => {
-        const name = event.target.name
-        const split_name = name.split("_")
-        const state_number = Number(split_name[split_name.length - 1])
         
-        const { entities } = this.state
-        entities[state_number].freq = Number(event.target.value)
+        const getEntitiesList = (key) => {
+            const returnList = [...entitiesList]
+            console.clear()
+            console.log(key)
+            for (let i = 0; i < key; i++) {
+                var element = entities[i];
+                
+                for (let j = 0; j < returnList.length; j++) {
+                    if (returnList[j].value == (element ? element.name : "null"))
+                    {
+                        returnList.splice(j, 1)
+                        console.log(element ? element.name : "null")
+                        break
+                    }
+                }
+            }
+            //console.log(returnList)
+            if (returnList.length == 0) this.props.handleBlockRemoveItem("entities", key)
+            return returnList
+        }
 
-        this.setState({
-            entities: entities
-        });
-        this.props.handleBlockChanges("entities", entities)
-    }
+        return entities.map((ent_, key) => {
 
-    render(){
-        const items = [
-            { "key": 1, "value": "IYILESTIRME", "text": "İyileştirme" },
-            { "key": 2, "value": "INDIRIM", "text": "İndirim" },
-            { "key": 3, "value": "SACKALIN", "text": "Sac Kalınlığı" },
-            { "key": 4, "value": "BANTGORUNUM", "text": "Bant Görünümü" }
-        ]
-        return this.state.entities.map((ent_, key) => {
-            return(
+            return (
                 <Stack direction='row' spacing={7} key={key}>
                     <Selector
                         name = {"entityField_" + key}
                         title = "Entities"
-                        handleSelectChance={(e) => this.handleSelectChance(e, null)}
-                        items = {items}
+                        value = {ent_.name}
+                        items = {getEntitiesList(key)}
+                        handleSelect = {this.props.handleBlockSelect}
                     />
                     <InputSlider
-                        title="Entity Frequency"
-                        name={"entitySlider_" + key}
-                        value={ent_.freq}
-                        handleSliderChange={this.handleSliderChange}
-                        handleInputChange={this.handleSliderChange}
+                        title = "Entity Frequency"
+                        name = {"entitySlider_" + key}
+                        value = {ent_.freq}
+                        handleSlider = {(name, value) => {
+                            this.props.handleBlockSlider('entities', name, value)
+                        }}
                     />
                     <Fab
                         size="small"
@@ -70,8 +71,8 @@ class EntityBlock extends Component {
                         onClick={() => {
                             this.props.handleBlockRemoveItem("entities", key)
                         }}
-                        style={{alignSelf: 'center'}}>
-                        <DeleteForeverRoundedIcon/>
+                        style={{ alignSelf: 'center' }}>
+                        <DeleteForeverRoundedIcon />
                     </Fab>
                 </Stack>
             )

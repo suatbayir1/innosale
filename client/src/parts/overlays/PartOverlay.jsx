@@ -78,6 +78,10 @@ class PartOverlay extends Component {
                 sertlik: dialogData.data.sertlik,
                 hazirlamaTarihi: dayjs(dialogData.data.hazirlama_tarihi),
             })
+        } else {
+            this.setState({
+                teklifId: dialogData.data.teklif_id,
+            })
         }
 
         setTimeout(() => {
@@ -325,7 +329,11 @@ class PartOverlay extends Component {
                                                 variant="outlined"
                                                 value={teklifId}
                                                 type={"number"}
-                                                onChange={(e) => { this.setState({ teklifId: e.target.value }) }}
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                                disabled
+                                            // onChange={(e) => { this.setState({ teklifId: e.target.value }) }}
                                             />
                                         </FormControl>
                                     </Grid>

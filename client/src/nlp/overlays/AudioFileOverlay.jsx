@@ -20,6 +20,7 @@ import { NotificationManager } from 'react-notifications';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import CheckIcon from '@mui/icons-material/Check';
+import TextField from '@mui/material/TextField';
 
 // Actions
 import { setOverlay, uploadAudioFile, setUploadAudioLoading, updateAudio } from "../../store/index";
@@ -32,6 +33,7 @@ class UploadAudioFile extends Component {
         super(props);
 
         this.state = {
+            teklifId: "",
             model: "tiny",
             files: []
         }
@@ -90,7 +92,7 @@ class UploadAudioFile extends Component {
     }
 
     render() {
-        const { model } = this.state;
+        const { model, teklifId } = this.state;
         const { setOverlay, uploadAudioLoading, dialogData } = this.props;
 
         return (
@@ -138,7 +140,23 @@ class UploadAudioFile extends Component {
                                         </DialogContentText>
                                     </Grid>
 
-                                    <Grid item xs={12} md={12}>
+                                    <Grid item xs={6} md={6}>
+                                        <FormControl style={{ minWidth: "100%" }}>
+                                            <TextField
+                                                label="Teklif Id"
+                                                variant="outlined"
+                                                value={teklifId}
+                                                type={"number"}
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                                disabled
+                                                onChange={(e) => { this.setState({ teklifId: e.target.value }) }}
+                                            />
+                                        </FormControl>
+                                    </Grid>
+
+                                    <Grid item xs={6} md={6}>
                                         <FormControl style={{ minWidth: "100%" }}>
                                             <InputLabel id="model-select">Model</InputLabel>
                                             <Select

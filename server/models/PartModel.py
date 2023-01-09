@@ -84,6 +84,17 @@ class PartModel(Base):
         except Exception as e:
             return [e, 500]
 
+    def get_parts_by_key_value(self, key, value):
+        try:
+            return self.base.mysql.select_by_key_value(
+                table_name = "parts", 
+                key = key,
+                value = [int(value)]
+            )
+            
+        except Exception as e:
+            return [e, 500]
+
     def delete_part(self, id):
         try:
             return self.base.mysql.delete(

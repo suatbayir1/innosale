@@ -3,6 +3,12 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
 export default function BasicTextFields(props) {
+
+  const handleInput = (event) => {
+    const { name, value } = event.target
+    props.handleInputChange(name, value)    
+  }
+
   return (
     <Box
       component="form"
@@ -18,7 +24,7 @@ export default function BasicTextFields(props) {
         label={props.title}
         value={props.value}
         variant="outlined"
-        onChange={props.handleInputChange}
+        onChange={handleInput}
       />
     </Box>
   );
