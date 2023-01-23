@@ -30,6 +30,16 @@ class FileController(FlaskView, Base):
         finally:
             pass
 
+    @route("/getAudiosByOfferId/<id>", methods = ["GET"])
+    def get_audios_by_offer_id(self, id):
+        try:
+            result = self.file_model.get_audios_by_offer_id(id)
+            return self.base.response(data = result[0], total_count = result[1], message = "Audios fetched successfully"), 200
+        except Exception as e:
+            return self.base.response(message = e), 500
+        finally:
+            pass
+
     @route("/uploadAudio", methods = ["POST"])
     def uploadAudio(self):
         try:
@@ -49,7 +59,8 @@ class FileController(FlaskView, Base):
             result = self.file_model.uploadAudio({
                 "filename": filename,
                 "path": destination,
-                "model": request.form["model"]
+                "model": request.form["model"],
+                "teklifId": request.form["teklifId"]
             })
 
             return self.base.response(message = str(result[0])), result[1]

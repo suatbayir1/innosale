@@ -92,6 +92,7 @@ tables = [
         "sql": """
             CREATE TABLE IF NOT EXISTS audios (
                 id int not null primary key auto_increment,
+                teklifId int,
                 filename varchar(255),
                 path varchar(255),
                 model varchar(50),

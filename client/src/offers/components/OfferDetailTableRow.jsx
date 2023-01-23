@@ -20,9 +20,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import { Header, EmptyState } from '../../components';
 import OfferDetailTableRowPartDetail from './OfferDetailTableRowPartDetail';
 import OfferDetailTableRowOperationDetail from './OfferDetailTableRowOperationDetail';
+import DeleteConfirmationDialog from '../../shared/overlays/DeleteConfirmationDialog';
 
 // Actions
-import { getOperationsByOfferId } from "../../store/index";
+import { setOverlay, setDialogData, getOperationsByOfferId, getPartsByOfferId, deletePart } from "../../store/index";
 
 // Constants
 import notFoundImage from '../../data/notfound.png'
@@ -33,6 +34,9 @@ class OfferDetailTableRow extends Component {
 
         this.state = {
             open: false,
+            openConfirmationDialog: false,
+            confirmationMessage: ``,
+            selectedRow: {}
         }
     }
 
@@ -41,12 +45,50 @@ class OfferDetailTableRow extends Component {
         await getOperationsByOfferId(params.id)
     }
 
+    delete = (row) => {
+        console.log("row", row);
+        this.setState({
+            openConfirmationDialog: true,
+            confirmationMessage: `The part record with ${row.id} IDs will be deleted from the system. Do you want to continue?`,
+            selectedRow: row
+        })
+    }
+
+    onAcceptDelete = async () => {
+        const { selectedRow } = this.state;
+        const { deletePart, params, getPartsByOfferId } = this.props;
+        await deletePart(selectedRow.id, params.id);
+        this.setState({ openConfirmationDialog: false });
+    }
+
+    edit = (row) => {
+        const { setOverlay, setDialogData } = this.props;
+
+        setOverlay("add-part");
+        setDialogData({ "mode": "edit", "title": "Edit Part", "data": row });
+    }
+
+    addOperation = () => {
+        const { setOverlay, setDialogData, params } = this.props;
+
+        setOverlay("operation-overlay");
+        setDialogData({ "mode": "add", "title": "Add Operation", "data": { "teklifId": params.id } });
+        console.log("create operation");
+    }
+
     render() {
-        const { open } = this.state;
+        const { open, openConfirmationDialog, confirmationMessage } = this.state;
         const { row, operationsByOfferId } = this.props;
 
         return (
             <React.Fragment>
+                <DeleteConfirmationDialog
+                    open={openConfirmationDialog}
+                    text={confirmationMessage}
+                    onClose={() => { this.setState({ openConfirmationDialog: false }) }}
+                    onAccept={this.onAcceptDelete}
+                />
+
                 <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
                     <TableCell component="th" scope="row">{row.teklif_no}</TableCell>
                     <TableCell>{row.teklif_id}</TableCell>
@@ -59,14 +101,14 @@ class OfferDetailTableRow extends Component {
                         <IconButton
                             aria-label="expand row"
                             size="small"
-                            onClick={() => { this.setState({ open: !open }) }}
+                            onClick={() => { this.delete(row) }}
                         >
                             <DeleteIcon />
                         </IconButton>
                         <IconButton
                             aria-label="expand row"
                             size="small"
-                            onClick={() => { this.setState({ open: !open }) }}
+                            onClick={() => { this.edit(row) }}
                         >
                             <EditIcon />
                         </IconButton>
@@ -99,6 +141,7 @@ class OfferDetailTableRow extends Component {
                                             startIcon={<AddIcon />}
                                             style={{ textTransform: 'none', width: '100%' }}
                                             color="primary"
+                                            onClick={this.addOperation}
                                         >
                                             Add Operation
                                         </Button>
@@ -112,8 +155,8 @@ class OfferDetailTableRow extends Component {
                                             minHeight={'50vh'}
                                             image={notFoundImage}
                                             primaryMessage={'No asset created yet'}
-                                            secondaryMessage={'No operation records related with this offer were found. Create a offer now.'}
-                                            buttonClick={() => { this.add() }}
+                                            secondaryMessage={'No operation records related with this offer were found. Create an operation now.'}
+                                            buttonClick={() => { this.addOperation() }}
                                             buttonText={'Create Operation'}
                                         />
                                         :
@@ -137,6 +180,10 @@ const mstp = (state) => {
 const mdtp = (dispatch) => {
     return {
         getOperationsByOfferId: (payload) => dispatch(getOperationsByOfferId(payload)),
+        getPartsByOfferId: (payload) => dispatch(getPartsByOfferId(payload)),
+        deletePart: (payload, offerId) => dispatch(deletePart(payload, offerId)),
+        setOverlay: (payload) => dispatch(setOverlay(payload)),
+        setDialogData: (payload) => dispatch(setDialogData(payload)),
     }
 }
 

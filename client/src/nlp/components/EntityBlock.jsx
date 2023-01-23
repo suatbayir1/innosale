@@ -27,8 +27,7 @@ class EntityBlock extends Component {
         
         const getEntitiesList = (key) => {
             const returnList = [...entitiesList]
-            console.clear()
-            console.log(key)
+            
             for (let i = 0; i < key; i++) {
                 var element = entities[i];
                 
@@ -41,7 +40,7 @@ class EntityBlock extends Component {
                     }
                 }
             }
-            //console.log(returnList)
+            
             if (returnList.length == 0) this.props.handleBlockRemoveItem("entities", key)
             return returnList
         }

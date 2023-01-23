@@ -41,10 +41,17 @@ class UploadAudioFile extends Component {
 
     componentDidMount() {
         const { dialogData } = this.props;
+        console.log({ dialogData })
 
         if (dialogData.mode === "edit") {
             this.setState({
-                model: dialogData.data.model
+                model: dialogData.data.model,
+            })
+        }
+
+        if (dialogData.data.teklifId) {
+            this.setState({
+                teklifId: dialogData.data.teklifId,
             })
         }
     }
@@ -56,11 +63,16 @@ class UploadAudioFile extends Component {
     }
 
     upload = () => {
-        const { files, model } = this.state;
+        const { files, model, teklifId } = this.state;
         const { uploadAudioFile, setUploadAudioLoading } = this.props;
 
         if (files[0] === undefined) {
             NotificationManager.error("You have not selected any files", "Missing Data", 3000);
+            return;
+        }
+
+        if (teklifId === "" || teklifId < 1) {
+            NotificationManager.error("Teklif Id cannot be empty or zero", "Wrong Data", 3000);
             return;
         }
 
@@ -69,12 +81,13 @@ class UploadAudioFile extends Component {
         formData.append('file', files[0]);
         formData.append('filename', files[0]["name"]);
         formData.append('model', model);
+        formData.append('teklifId', teklifId);
 
         uploadAudioFile(formData)
     }
 
     save = () => {
-        const { model } = this.state;
+        const { model, teklifId } = this.state;
         const { dialogData, updateAudio, setUploadAudioLoading } = this.props;
 
         setUploadAudioLoading(true);
@@ -82,6 +95,7 @@ class UploadAudioFile extends Component {
         const payload = {
             "attributes": {
                 "model": model,
+                "teklifId": teklifId
             },
             "where": {
                 "id": dialogData.data.id
@@ -147,10 +161,13 @@ class UploadAudioFile extends Component {
                                                 variant="outlined"
                                                 value={teklifId}
                                                 type={"number"}
+                                                inputProps={{
+                                                    min: 0
+                                                }}
                                                 InputLabelProps={{
                                                     shrink: true,
                                                 }}
-                                                disabled
+                                                disabled={dialogData.data.teklifId ? true : false}
                                                 onChange={(e) => { this.setState({ teklifId: e.target.value }) }}
                                             />
                                         </FormControl>

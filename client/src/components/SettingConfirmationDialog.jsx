@@ -27,9 +27,8 @@ export default function SettingConfirmationDialog(props) {
                     <Button onClick={() => setOpen(name, false)}>Cancel</Button>
                     <Button
                         color="error"
-                        onClick={() => {
-                            confirmedFunction()
-                            window.location.reload(true)
+                        onClick={async () => {
+                            await confirmedFunction()
                         }}
                     >OK</Button>   
                 </DialogActions>

@@ -51,10 +51,6 @@ class OfferDetail extends Component {
     render() {
         const { part, operationsByOfferId, params, offerDetailPageLoading } = this.props;
 
-        console.log("offer-detail-part", part);
-        console.log("offer-detail-operation", operationsByOfferId);
-        console.log({ offerDetailPageLoading })
-
         return (
             <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
                 <Header category="Sales Case Company Name" title="Offer Details" />
@@ -70,6 +66,20 @@ class OfferDetail extends Component {
                     </Box>
                         :
                         <>
+                            <Grid container spacing={2} style={{ marginTop: '20px' }}>
+                                <Grid item xs={2} md={2}>
+                                    <Link to={`/audio-files/${params.id}`}>
+                                        <Button
+                                            variant="outlined"
+                                            startIcon={<AddIcon />}
+                                            style={{ textTransform: 'none', width: '100%' }}
+                                            color="primary"
+                                        >
+                                            Audio Files
+                                        </Button>
+                                    </Link>
+                                </Grid>
+                            </Grid>
                             {
                                 part.length === 0 ?
                                     <EmptyState
@@ -82,20 +92,6 @@ class OfferDetail extends Component {
                                     />
                                     :
                                     <>
-                                        <Grid container spacing={2} style={{ marginTop: '20px' }}>
-                                            <Grid item xs={2} md={2}>
-                                                <Link to={`/audio-files/${params.id}`}>
-                                                    <Button
-                                                        variant="outlined"
-                                                        startIcon={<AddIcon />}
-                                                        style={{ textTransform: 'none', width: '100%' }}
-                                                        color="primary"
-                                                    >
-                                                        Audio Files
-                                                    </Button>
-                                                </Link>
-                                            </Grid>
-                                        </Grid>
                                         <Grid container spacing={2} style={{ marginTop: '20px' }}>
                                             <Grid item xs={12} md={12}>
                                                 <TableContainer component={Paper}>

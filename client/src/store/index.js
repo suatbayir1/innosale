@@ -16,6 +16,7 @@ export {
     getOperations,
     setOperationsGridLoading,
     getOperationsByOfferId,
+    addOperation,
 } from "../operations/operationActions";
 
 export {
@@ -26,6 +27,7 @@ export {
 export {
     setSummarizeSettings,
     getAllAudios,
+    getAudiosByOfferId,
     uploadAudioFile,
     deleteAudioFile,
     setUploadAudioLoading,

@@ -60,33 +60,66 @@ class Summarization extends Component {
         }
     }
 
+    clearScreen = () => {
+        this.setState({
+            // Setting Select
+            selectedSettingId: '',
+            selectedSettingIndex: 0,
+            selectedSettingName: '',
+
+            // Save Dialog
+            saveSettingName: '',
+            selectedRadio: 'new',
+            
+            // Summarize
+            normalWordsFrequencyValue: 0,
+            numericFrequencyValue: 0,
+            importantWords: [],
+            entities: [],
+            
+            // Confirmation Dialogs
+            openClearScreen: false,
+            openDeleteSetting: false
+        })
+    }
+
     handleDialogBox = (name, value) => {
         this.setState({
             [name]: value
         })
     }
 
-    handle = () => {
+    getSummarizeId = (summarizeId = "0") => {
+        console.log({
+            "_id": summarizeId == "0" ? this.state.selectedSettingId : summarizeId,
+            "path": "/root/whisper_service/static/meetings/m_01.txt"
+        })
+
         return ({
-            "_id": this.state.selectedSettingId,
+            "_id": summarizeId == "0" ? this.state.selectedSettingId : summarizeId,
             "path": "/root/whisper_service/static/meetings/m_01.txt"
         })
     }
-    summarizer = async () => {
+    summarizer = async (summarizeId = "0") => {
         const { getSummarize } = this.props;
-        await getSummarize(this.handle())
+        await getSummarize(this.getSummarizeId(summarizeId))
         const { summarizeResult } = this.props;
         console.log(summarizeResult)
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         // Settings Select
         const { getAllSettings, getEntities } = this.props;
-        getAllSettings()
-        getEntities()
+        await getEntities()
+        await this.setEntities()
 
-        this.setSettingSelect()
-        this.setEntities()
+        await getAllSettings()
+        await this.setSettingSelect()
+        
+        await getAllSettings()
+        await this.setSettingSelect()
+
+        await this.clearScreen()
     }
 
     handleSliderChange = (event, newValue) => {
@@ -135,9 +168,11 @@ class Summarization extends Component {
     //////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////
 
-    setSettingSelect = () => {
-        const { settingsList } = this.state;
-        const { summarizeSettings } = this.props;
+    setSettingSelect = async () => {
+        //const { settingsList } = this.state;
+        const settingsList = await [];
+        const { summarizeSettings } = await this.props;
+        
 
         summarizeSettings.map((value, key) => {
             settingsList.push({
@@ -299,7 +334,7 @@ class Summarization extends Component {
         }
     };
 
-    save = () => {
+    save = async (onSummarizeButton=false) => {
         const payload = {
             _id: this.state.selectedSettingId,
             name: this.state.saveSettingName,
@@ -308,21 +343,42 @@ class Summarization extends Component {
             entities: this.state.entities,
             important_words: this.state.importantWords
         }
-        const { selectedRadio } = this.state
-        if (selectedRadio == "edit") {
-            this.props.updateSettings(payload);
-            //window.location.reload();
-            alert("Update setting record success!")
+        const { selectedRadio } = await this.state
+        if (onSummarizeButton) {
+            await this.props.saveSettings(payload);
+            await this.setState(
+                {
+                    insertedId: this.props.insertedId
+                }, async () => {
+                    await this.summarizer(this.state.insertedId);
+                    await this.props.removeSetting({ '_id': this.state.insertedId }) 
+                }
+            )
+
         }
-        else if (selectedRadio == "new") {
-            this.props.saveSettings(payload);
-            //window.location.reload();
-            alert("New setting record success!")
+        else {
+            if (selectedRadio == "edit") {
+                await this.props.updateSettings(payload);
+                await alert("Update setting record success!")
+            }
+            else if (selectedRadio == "new") {
+                await this.props.saveSettings(payload);
+                await alert("New setting record success!")
+            }
+            
+            await window.location.reload();
+            const { getAllSettings } =await this.props;
+            await getAllSettings()
+            await this.setSettingSelect()
+            await this.clearScreen()
+            await window.location.reload();
+            window.location.reload();
+            
         }
     }
 
     render() {
-        const { numericFrequencyValue, normalWordsFrequencyValue } = this.state;
+        const { numericFrequencyValue, normalWordsFrequencyValue, selectedSettingId } = this.state;
 
         return (
             <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
@@ -334,10 +390,38 @@ class Summarization extends Component {
                         name = {"openDeleteSetting"}
                         header = {"Warning"}
                         text = {"Are you sure you want to delete this setting completely?"}
-                        confirmedFunction = {() => {
-                            this.props.removeSetting({
-                                '_id': this.state.selectedSettingId
+                        confirmedFunction = { async () => {
+                            const selected = selectedSettingId.toString();
+
+                            await this.props.removeSetting({
+                                '_id': selected
                             })
+                            const { getAllSettings } = await this.props;
+                            this.setState({});
+                            await getAllSettings()
+                            await this.setSettingSelect()
+                            this.setState({});
+
+                            const settingsList = await []
+                            await this.state.settingsList.map((value, key) => {
+                                if (value.value != selected) {
+                                    settingsList.push({
+                                        "key": key,
+                                        "value": value.value,
+                                        "text": value.text
+                                    })
+                                }
+                            })
+                           
+                            await this.setState({
+                                selectedSettingIndex: 0,
+                                selectedSettingName: '',
+                                selectedSettingId: '',
+                                settingsList: settingsList
+                            }, async () => {
+                                await this.clearScreen()
+                            })
+                            
                         }}
                     />
                     <SettingConfirmationDialog
@@ -346,7 +430,7 @@ class Summarization extends Component {
                         name = {"openClearScreen"}
                         header = {"Warning"}
                         text = {"Are you sure you want to clear screen?"}
-                        confirmedFunction = {() => window.location.reload(true)}
+                        confirmedFunction = {this.clearScreen}
                     />
                     
                     <Stack spacing={2} direction='row' marginBottom={5}>
@@ -382,11 +466,11 @@ class Summarization extends Component {
                             selectedRadio = {this.state.selectedRadio}
                         />
                         <SummarizeResultDialog
-                            summarizer = {this.summarizer}
+                            save = {this.save}
                             summarizeResult = {this.props.summarizeResult}
                         />
                         <div>
-                            {/*<Button
+                            <Button
                                 style={{ textTransform: 'none' }}
                                 variant="contained"
                                 startIcon={<TextSnippetRoundedIcon />}
@@ -394,7 +478,7 @@ class Summarization extends Component {
                                 onClick={() => {console.log(this.state)}}
                             >
                                 Log State
-                            </Button>*/}
+                            </Button>
                         </div>
                         
                     </Stack>
@@ -503,7 +587,9 @@ const mstp = (state) => {
         selectedSetting: state.nlp.selectedSetting,
         summarizeSettings: state.nlp.summarizeSettings,
         summarizeResult: state.nlp.summarizeResult,
-        entityList: state.nlp.entityList
+        entityList: state.nlp.entityList,
+        insertedId: state.nlp.insertedId
+
     }
 }
 

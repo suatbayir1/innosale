@@ -29,7 +29,7 @@ export default function SummarizeResultDialog(props) {
                 startIcon={<TextSnippetRoundedIcon />}
                 color="primary"
                 onClick={async () => {
-                    await props.summarizer()
+                    await props.save(true)
                     handleClickOpen()
                 }}
             >

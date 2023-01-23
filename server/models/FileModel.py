@@ -13,13 +13,14 @@ class FileModel(Base):
 
     def uploadAudio(self, payload):
         try: 
+            print("payload", payload)
             result = self.base.mysql.insert(
                 table_name = "audios",
                 columns = """
-                    filename, path, model
+                    filename, path, model, teklifId
                 """,
-                column_types = "%s, %s, %s",
-                val = ([payload["filename"], payload["path"], payload["model"]]) 
+                column_types = "%s, %s, %s, %s",
+                val = ([payload["filename"], payload["path"], payload["model"], payload["teklifId"]]) 
             )
 
             return result
@@ -36,6 +37,18 @@ class FileModel(Base):
             
         except Exception as e:
             return [e, 500]
+
+    def get_audios_by_offer_id(self, value):
+        try:
+            return self.base.mysql.select_by_key_value(
+                table_name = "audios", 
+                key = "teklifId",
+                value = [int(value)]
+            )
+            
+        except Exception as e:
+            return [e, 500]
+
 
     def get_audio_by_id(self, id):
         try:

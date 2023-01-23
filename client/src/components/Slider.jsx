@@ -23,7 +23,7 @@ export default function InputSlider (props) {
 
   const handleBlur = (event) => {
     const { name, value } = event.target
-    const blurValue = value > 100 ? 100 : 0
+    const blurValue = parseInt(value) > 100 ? 100 : 0
     props.handleSlider(name, blurValue) 
   }
 
@@ -61,7 +61,7 @@ export default function InputSlider (props) {
             value = {typeof value === 'number' ? value : 0}
             size = 'small'
             onChange = {handleSlider}
-            onBlur = {handleBlur}
+            //onBlur = {handleBlur}
             inputProps = {{
               step: 5,
               min: 0,

@@ -5,6 +5,9 @@ import { NotificationManager } from 'react-notifications';
 // Types
 import { GET_OPERATIONS, SET_OPERATIONS_GRID_LOADING, GET_OPERATIONS_BY_OFFER_ID } from "./operationTypes";
 
+// Actions
+import { setOverlay } from "../store";
+
 export const setOperations = (payload) => {
     return {
         type: GET_OPERATIONS,
@@ -70,6 +73,25 @@ export const getOperationsByOfferId = (id) => {
             .catch(err => {
                 NotificationManager.error(err.response.data.message, 'Error', 3000);
                 dispatch(setOperationsByOfferId([]));
+            })
+    }
+}
+
+export const addOperation = (payload) => {
+    return (dispatch, getState) => {
+        let url = `${process.env.REACT_APP_API_URL}/operation/add`;
+        axios
+            .post(url, payload)
+            .then(response => {
+                console.log("response", response);
+                if (response.status === 200) {
+                    NotificationManager.success(response.data.message, 'Successfull', 3000);
+                    dispatch(setOverlay('none'));
+                    dispatch(getOperationsByOfferId(payload.teklif_id))
+                }
+            })
+            .catch(err => {
+                NotificationManager.error(err.response.data.message, 'Error', 3000);
             })
     }
 }

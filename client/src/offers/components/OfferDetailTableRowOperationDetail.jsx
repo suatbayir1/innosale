@@ -10,15 +10,24 @@ import ForwardToInboxIcon from '@mui/icons-material/ForwardToInbox';
 import TranslateIcon from '@mui/icons-material/Translate';
 import { GoPackage } from 'react-icons/go';
 import { TbShovel } from 'react-icons/tb';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 // Helpers
 import { dateToTableFormat } from '../../shared/helpers/convert';
+
+// Components
+import DeleteConfirmationDialog from '../../shared/overlays/DeleteConfirmationDialog';
 
 class OfferDetailTableRowOperationDetail extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            openConfirmationDialog: false,
+            confirmationMessage: ``,
+            selectedRow: {},
             allowedKeys: [
                 "BCNC", "CAD", "CAM", "DNM", "GCNC", "KCNC", "MONTAJ", "OLCUM", "TwoD", "createdAt", "updatedAt", "doluluk",
                 "euro_kg", "iscilik_mly", "iscilik_saat", "isil_islem_mly", "isil_islem_tip", "kalip_agirlik", "kalip_boyut_x",
@@ -89,19 +98,34 @@ class OfferDetailTableRowOperationDetail extends Component {
         }
     }
 
+    delete = (row) => {
+        console.log("row", row);
+        this.setState({
+            openConfirmationDialog: true,
+            confirmationMessage: `The operation record with ${row.id} IDs will be deleted from the system. Do you want to continue?`,
+            selectedRow: row
+        })
+    }
+
     render() {
-        const { allowedKeys, titles } = this.state;
+        const { allowedKeys, titles, openConfirmationDialog, confirmationMessage } = this.state;
         const { operationsByOfferId } = this.props;
 
         return (
             <Grid container spacing={2}>
+                <DeleteConfirmationDialog
+                    open={openConfirmationDialog}
+                    text={confirmationMessage}
+                    onClose={() => { this.setState({ openConfirmationDialog: false }) }}
+                    onAccept={this.onAcceptDelete}
+                />
                 {
                     operationsByOfferId.map(operation => {
                         return (
                             <Grid key={operation.id} item xs={12} md={12}>
                                 <Accordion>
                                     <AccordionSummary
-                                        expandIcon={<ExpandMoreIcon />}
+                                        // expandIcon={<ExpandMoreIcon />}
                                         aria-controls="panel1a-content"
                                         id="panel1a-header"
                                     >
@@ -141,6 +165,24 @@ class OfferDetailTableRowOperationDetail extends Component {
                                                         <p className="text-sm text-gray-400">{operation.packaging || "undefined"}</p>
                                                     </div>
                                                 </div>
+                                            </Grid>
+                                            <Grid item xs={3} md={3}>
+                                            </Grid>
+                                            <Grid item xs={1} md={1}>
+                                                <IconButton
+                                                    aria-label="expand row"
+                                                    size="small"
+                                                    onClick={() => { this.delete(operation) }}
+                                                >
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                                <IconButton
+                                                    aria-label="expand row"
+                                                    onClick={() => { console.log("test") }}
+                                                    size="small"
+                                                >
+                                                    <EditIcon />
+                                                </IconButton>
                                             </Grid>
                                         </Grid>
                                     </AccordionSummary>

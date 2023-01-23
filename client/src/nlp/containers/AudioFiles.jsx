@@ -12,12 +12,14 @@ import Button from '@mui/material/Button';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
 import DownloadIcon from '@mui/icons-material/Download';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { withStyles } from '@material-ui/core/styles';
+import SummarizeIcon from '@mui/icons-material/Summarize';
 
 // Components
 import { Header } from '../../components';
 
 // Actions
-import { setOverlay, setDialogData, getAllAudios, deleteAudioFile } from "../../store/index";
+import { setOverlay, setDialogData, getAllAudios, deleteAudioFile, getAudiosByOfferId } from "../../store/index";
 
 // Helpers
 import { dateToTableFormat } from "../../shared/helpers/convert";
@@ -29,6 +31,14 @@ import withRouter from '../../shared/hoc/withRouter';
 // Overlays
 import DeleteConfirmationDialog from "../../shared/overlays/DeleteConfirmationDialog";
 
+const styles = theme => ({
+    root: {
+        "& .MuiDataGrid-columnHeaderCheckbox .MuiDataGrid-columnHeaderTitleContainer": {
+            display: "none"
+        }
+    }
+});
+
 class AudioFiles extends Component {
     constructor(props) {
         super(props);
@@ -38,15 +48,15 @@ class AudioFiles extends Component {
             confirmationMessage: "",
             selectedRow: {},
             pageSize: 5,
+            selected: [],
         }
     }
 
     componentDidMount() {
-        const { getAllAudios, params } = this.props;
+        const { getAllAudios, getAudiosByOfferId, params } = this.props;
 
         if (params.id) {
-            // TODO: GET AUDIOS BY OFFER ID
-            console.log("params", params);
+            getAudiosByOfferId(params.id);
         } else {
             getAllAudios();
         }
@@ -60,6 +70,14 @@ class AudioFiles extends Component {
     }
 
     CustomToolbar = () => {
+        const { selected } = this.state;
+        const { audios } = this.props;
+        let selectedAudio;
+
+        if (selected.length > 0) {
+            selectedAudio = audios.find(audio => audio.id === selected[0]);
+        }
+
         return (
             <GridToolbarContainer>
                 <div
@@ -72,49 +90,111 @@ class AudioFiles extends Component {
                     >
                         UPLOAD
                     </Button>
+                    <Button
+                        startIcon={<EditIcon />}
+                        onClick={this.edit}
+                        disabled={selected.length === 1 ? false : true}
+                        size="small"
+                    >
+                        EDIT
+                    </Button>
+                    <Button
+                        startIcon={<DeleteIcon />}
+                        onClick={this.delete}
+                        disabled={selected.length === 1 ? false : true}
+                        size="small"
+                    >
+                        DELETE
+                    </Button>
+                    <Link to={selected.length === 1 ? `/audio-player/${selectedAudio.id}` : "#"}>
+                        <Button
+                            startIcon={<NorthEastIcon />}
+                            disabled={selected.length === 1 ? false : true}
+                            size="small"
+                        >
+                            Audio Player
+                        </Button>
+                    </Link>
+                    <Button
+                        startIcon={<SummarizeIcon />}
+                        onClick={this.openSummarize}
+                        disabled={selected.length === 1 ? false : true}
+                        size="small"
+                    >
+                        Summarize
+                    </Button>
+                    <Button
+                        startIcon={<DownloadIcon />}
+                        onClick={() => { downloadFile(selectedAudio) }}
+                        disabled={selected.length === 1 ? false : true}
+                        size="small"
+                    >
+                        DOWNLOAD
+                    </Button>
                 </div>
                 <GridToolbar />
             </GridToolbarContainer>
         );
     }
 
-    edit = (row) => {
+    openSummarize = () => {
+        const { selected } = this.state;
         const { setOverlay, setDialogData } = this.props;
 
+        setOverlay("summarize-overlay");
+        setDialogData({ "mode": "view", "title": "Summarize", "data": {} });
+    }
+
+    edit = () => {
+        const { selected } = this.state;
+        const { setOverlay, setDialogData, audios } = this.props;
+
+        const selectedAudio = audios.find(audio => audio.id === selected[0]);
+
         setOverlay("add-audio-file");
-        setDialogData({ "mode": "edit", "title": "Edit Audio File", "data": row });
+        setDialogData({ "mode": "edit", "title": "Edit Audio File", "data": selectedAudio });
+    }
+
+    delete = () => {
+        console.log("delete");
+        const { selected } = this.state;
+        const { audios } = this.props;
+
+        const selectedAudio = audios.find(audio => audio.id === selected[0]);
+
+        this.setState({
+            selected: [],
+            openConfirmationDialog: true,
+            confirmationMessage: `The audio file with ${selectedAudio.id} IDs will be deleted from the system. Do you want to continue?`,
+            selectedRow: selectedAudio
+        })
     }
 
     upload = () => {
-        const { setOverlay, setDialogData } = this.props;
+        const { setOverlay, setDialogData, params } = this.props;
 
         setOverlay("add-audio-file")
-        setDialogData({ "mode": "upload", "title": "Upload Audio File", "data": {} });
+        setDialogData({
+            "mode": "upload", "title": "Upload Audio File", "data": {
+                teklifId: params.id || ""
+            }
+        });
     }
 
     render() {
-        const { openConfirmationDialog, confirmationMessage, pageSize } = this.state;
-        const { audios } = this.props;
+        const { openConfirmationDialog, confirmationMessage, pageSize, selected } = this.state;
+        const { audios, classes } = this.props;
 
         const columns = [
-            {
-                field: 'direction',
-                headerName: '',
-                width: 50,
-                renderCell: (params) => {
-                    return (
-                        <Link to={`/audio-player/${params.row.id}`}>
-                            <IconButton aria-label="edit" color="primary">
-                                <NorthEastIcon />
-                            </IconButton>
-                        </Link>
-                    );
-                }
-            },
             {
                 field: 'id',
                 headerName: 'ID',
                 width: 70
+            },
+            {
+                field: 'teklifId',
+                headerName: 'Teklif ID',
+                width: 100
             },
             {
                 field: 'filename',
@@ -143,46 +223,8 @@ class AudioFiles extends Component {
             {
                 field: 'path',
                 headerName: 'Path',
-                width: 400,
+                width: 450,
             },
-            {
-                field: 'actions',
-                headerName: 'Actions',
-                width: 150,
-                renderCell: (params) => {
-                    return (
-                        <Stack direction="row" spacing={2}>
-                            <IconButton
-                                aria-label="download"
-                                color="success"
-                                onClick={() => { downloadFile(params.row) }}
-                            >
-                                <DownloadIcon />
-                            </IconButton>
-                            <IconButton
-                                aria-label="edit"
-                                color="primary"
-                                onClick={() => { this.edit(params.row) }}
-                            >
-                                <EditIcon />
-                            </IconButton>
-                            <IconButton
-                                aria-label="delete"
-                                color="error"
-                                onClick={() => {
-                                    this.setState({
-                                        openConfirmationDialog: true,
-                                        confirmationMessage: `The audio file with ${params.row.id} IDs will be deleted from the system. Do you want to continue?`,
-                                        selectedRow: params.row
-                                    })
-                                }}
-                            >
-                                <DeleteIcon />
-                            </IconButton>
-                        </Stack>
-                    );
-                }
-            }
         ];
 
         return (
@@ -190,6 +232,7 @@ class AudioFiles extends Component {
                 <Header category="NLP" title="Audio Files" />
                 <Box sx={{ height: 400, width: '100%' }} mt={2}>
                     <DataGrid
+                        className={classes.root}
                         rows={audios}
                         columns={columns}
                         disableSelectionOnClick
@@ -198,6 +241,20 @@ class AudioFiles extends Component {
                         onPageSizeChange={(pageSize) => this.setState({ pageSize })}
                         rowsPerPageOptions={[5, 10, 20]}
                         pagination
+                        loading={false}
+                        checkboxSelection
+                        hideFooterSelectedRowCount
+                        selectionModel={selected}
+                        onSelectionModelChange={(selection) => {
+                            if (selection.length > 1) {
+                                const selectionSet = new Set(selected);
+                                const result = selection.filter((s) => !selectionSet.has(s));
+
+                                this.setState({ selected: result });;
+                            } else {
+                                this.setState({ selected: selection });;
+                            }
+                        }}
                     />
                 </Box>
 
@@ -221,10 +278,11 @@ const mstp = (state) => {
 const mdtp = (dispatch) => {
     return {
         getAllAudios: () => dispatch(getAllAudios()),
+        getAudiosByOfferId: (payload) => dispatch(getAudiosByOfferId(payload)),
         setOverlay: (payload) => dispatch(setOverlay(payload)),
         deleteAudioFile: (payload) => dispatch(deleteAudioFile(payload)),
         setDialogData: (payload) => dispatch(setDialogData(payload))
     }
 }
 
-export default withRouter(connect(mstp, mdtp)(AudioFiles));
+export default withRouter(withStyles(styles)(connect(mstp, mdtp)(AudioFiles)));

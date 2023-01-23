@@ -39,7 +39,7 @@ class OperationController(FlaskView, Base):
             confirm, message = self.base.request_validation(request.json, required_keys.operation["add"])
 
             if not confirm:
-                return self.base.response(message = message)
+                return self.base.response(message = message), 404
 
             print("1")
 

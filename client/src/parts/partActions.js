@@ -72,6 +72,7 @@ export const getPartsByOfferId = (id) => {
         axios
             .get(url)
             .then(response => {
+                console.log("getPartsByOfferId", response)
                 if (response.status === 200) {
                     dispatch(setPart(response.data.data));
                 }
@@ -109,7 +110,7 @@ export const addPart = (payload) => {
     }
 }
 
-export const deletePart = (id) => {
+export const deletePart = (id, offerId = 0) => {
     return (dispatch, getState) => {
         let url = `${process.env.REACT_APP_API_URL}/part/delete/${id}`;
 
@@ -118,6 +119,9 @@ export const deletePart = (id) => {
             .then(response => {
                 if (response.status === 200) {
                     dispatch(getParts());
+                    if (offerId > 0) {
+                        dispatch(getPartsByOfferId(offerId))
+                    }
                     NotificationManager.success(response.data.message, 'Success', 3000);
                 }
             })

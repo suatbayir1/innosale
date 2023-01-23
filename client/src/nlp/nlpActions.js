@@ -3,7 +3,7 @@ import axios from "axios";
 import { NotificationManager } from 'react-notifications';
 
 // Types
-import { UPLOAD_AUDIO_LOADING, SET_AUDIOS, SUMMARIZE_SETTINGS, SUMMARIZE_RESULT, ENTITY_LIST, SELECTED_SETTING } from "./nlpTypes";
+import { UPLOAD_AUDIO_LOADING, SET_AUDIOS, SUMMARIZE_SETTINGS, SUMMARIZE_RESULT, ENTITY_LIST, SELECTED_SETTING, INSERTED_ID } from "./nlpTypes";
 
 // Actions
 import { setOverlay } from "../store/index";
@@ -50,6 +50,12 @@ export const setSetting = (payload) => {
     }
 }
 
+export const setInsertedId = (payload) => {
+    return {
+        type: INSERTED_ID,
+        payload
+    }
+}
 // Redux Thunk
 export const getAllAudios = () => {
     return (dispatch, getState) => {
@@ -68,7 +74,26 @@ export const getAllAudios = () => {
     }
 }
 
+export const getAudiosByOfferId = (id) => {
+    return (dispatch, getState) => {
+        let url = `${process.env.REACT_APP_API_URL}/file/getAudiosByOfferId/${id}`;
+        axios
+            .get(url)
+            .then(response => {
+                if (response.status === 200) {
+                    dispatch(setAudios(response.data.data));
+                }
+            })
+            .catch(err => {
+                dispatch(setAudios([]));
+                NotificationManager.error(err.response.data.message, 'Error', 3000);
+            })
+    }
+}
+
+
 export const uploadAudioFile = (payload) => {
+    console.log(window.location.pathname.split("/").length);
     return (dispatch, getState) => {
         let url = `${process.env.REACT_APP_API_URL}/file/uploadAudio`;
         axios
@@ -77,7 +102,13 @@ export const uploadAudioFile = (payload) => {
                 if (response.status === 200) {
                     NotificationManager.success(response.data.message, 'Successfull', 3000);
                     dispatch(setOverlay('none'));
-                    dispatch(getAllAudios());
+
+                    // If url exist param fetch audios by offerId
+                    if (window.location.pathname.split("/").length === 3) {
+                        dispatch(getAudiosByOfferId(window.location.pathname.split("/")[2]));
+                    } else {
+                        dispatch(getAllAudios());
+                    }
                 }
             })
             .catch(err => {
@@ -118,7 +149,13 @@ export const updateAudio = (payload) => {
                 if (response.status === 200) {
                     NotificationManager.success(response.data.message, 'Successfull', 3000);
                     dispatch(setOverlay('none'));
-                    dispatch(getAllAudios());
+
+                    // If url exist param fetch audios by offerId
+                    if (window.location.pathname.split("/").length === 3) {
+                        dispatch(getAudiosByOfferId(window.location.pathname.split("/")[2]));
+                    } else {
+                        dispatch(getAllAudios());
+                    }
                 }
             })
             .catch(err => {
@@ -131,15 +168,17 @@ export const updateAudio = (payload) => {
 }
 
 export const saveSettings = (payload) => {
-    return () => {
+    return (dispatch) => {
         let url = `${process.env.REACT_APP_BASE_SERVER_URL1}/api/v1/spacy/db_insert_settings`
         axios
             .post(url, payload)
             .then(response => {
                 console.log(response)
+                dispatch(setInsertedId(response.data.data.inserted_id))
             })
             .catch(err => {
                 console.log(err);
+                dispatch(setInsertedId(""))
             })
     }
 }

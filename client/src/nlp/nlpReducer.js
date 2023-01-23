@@ -1,5 +1,5 @@
 // TYPES
-import { SET_AUDIOS, UPLOAD_AUDIO_LOADING, SUMMARIZE_SETTINGS, SUMMARIZE_RESULT, ENTITY_LIST, SELECTED_SETTING } from "./nlpTypes";
+import { SET_AUDIOS, UPLOAD_AUDIO_LOADING, SUMMARIZE_SETTINGS, SUMMARIZE_RESULT, ENTITY_LIST, SELECTED_SETTING, INSERTED_ID } from "./nlpTypes";
 
 const initialState = {
     audios: [],
@@ -37,6 +37,11 @@ const nlpReducer = (state = initialState, action) => {
             return {
                 ...state,
                 selectedSetting: action.payload
+            }
+        case INSERTED_ID:
+            return {
+                ...state,
+                insertedId: action.payload
             }
         default:
             return state;

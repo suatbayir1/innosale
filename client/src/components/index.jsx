@@ -17,3 +17,4 @@ export { default as Header } from './Header';
 export { default as Summarization } from '../nlp/components/Summarization'
 export { default as OfferDetailTableRow } from '../offers/components/OfferDetailTableRow';
 export { default as EmptyState } from '../shared/components/EmptyState';
+export { default as InputGroup } from '../operations/components/InputGroup';

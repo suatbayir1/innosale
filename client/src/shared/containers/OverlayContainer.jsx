@@ -8,6 +8,8 @@ import PartOverlay from '../../parts/overlays/PartOverlay';
 import DetailOffer from '../../offers/overlays/DetailOffer';
 import ConfirmationDialog from '../../components/ConfirmationDialogClass';
 import OfferOverlay from '../../offers/overlays/OfferOverlay';
+import SummarizeOverlay from '../../nlp/overlays/SummarizeOverlay';
+import OperationOverlay from '../../operations/overlays/OperationOverlay';
 
 // Actions
 import { setOverlay } from "../../store/index";
@@ -27,6 +29,10 @@ class OverlayContainer extends Component {
                 return <OfferOverlay />
             case 'summarize-settings':
                 return <ConfirmationDialog />
+            case 'summarize-overlay':
+                return <SummarizeOverlay />
+            case 'operation-overlay':
+                return <OperationOverlay />
             default: return null
         }
     }

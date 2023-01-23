@@ -112,6 +112,7 @@ class Parts extends Component {
         const selectedPart = parts?.result.find(part => part.id === selected[0]);
 
         this.setState({
+            selected: [],
             openConfirmationDialog: true,
             confirmationMessage: `The part record with ${selectedPart.id} IDs will be deleted from the system. Do you want to continue?`,
             selectedRow: selectedPart

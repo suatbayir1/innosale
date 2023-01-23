@@ -30,11 +30,8 @@ export default function SaveSettingDialog(props) {
         setOpen(false);
     };
 
-    const handleSaveClick = () => {
-        props.save(selectedRadio)
-        window.location.reload(true)
-        window.location.reload(true)
-        
+    const handleSaveClick = async () => {
+        await props.save()
     }
 
     return (
