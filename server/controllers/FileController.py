@@ -49,6 +49,9 @@ class FileController(FlaskView, Base):
 
             current_file = request.files['file']
             filename = secure_filename(current_file.filename)
+            
+            if not filename.endswith(".wav"):
+                return self.base.response(message = "Unsupported media type"), 415
 
             if filename in os.listdir(target):
                 return self.base.response(message = "Filename already exists"), 409

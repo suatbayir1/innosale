@@ -96,6 +96,15 @@ class SceneService {
         return controls;
     }
 
+    createOrbitControlAroundTarget = (camera, dom, center) => {
+        let controls = new OrbitControls(camera, dom);
+        controls.target.set( center[0], center[1], center[2]);
+		controls.update();
+		controls.enablePan = false;
+		controls.enableDamping = true;
+        return controls;
+    }
+
     addLightToScene = () => {
         const light = new THREE.HemisphereLight(0x443333, 0x111122)
         this.scene.add(light);
@@ -150,6 +159,48 @@ class SceneService {
                 mesh.receiveShadow = true;
                 console.log(mesh);
 
+                await vm.scene.add(mesh);
+                await vm.renderer.render(vm.scene, vm.camera)
+                resolve(mesh.uuid);
+            });
+        })
+    }
+
+    addPlyFileWithUrl2 = async (url, setCenter) => {
+        const loader = new PLYLoader();
+        let vm = this;
+
+        const geometry = await loader.load(url);
+        console.log("geometry 1", geometry);
+
+        return new Promise((resolve, reject) => {
+            loader.load(url, async function (geometry) {
+                
+                geometry.computeBoundingBox();
+                geometry.center();
+
+                console.log("geometry 2", geometry);
+                geometry.computeVertexNormals();
+                console.log(geometry);
+                const material = new THREE.MeshStandardMaterial({ color: 0x0055ff, flatShading: true });
+                const mesh = new THREE.Mesh(geometry, material);
+
+                // console.log(mesh.scale);
+                mesh.scale.multiplyScalar(0.0048);
+                mesh.castShadow = true;
+                mesh.receiveShadow = true;
+                console.log(mesh);
+
+                var middle = new THREE.Vector3(0,0,0);
+                /*
+                middle.x = (geometry.boundingBox.max.x + geometry.boundingBox.min.x) / 2;
+                middle.y = (geometry.boundingBox.max.y + geometry.boundingBox.min.y) / 2;
+                middle.z = (geometry.boundingBox.max.z + geometry.boundingBox.min.z) / 2;
+                console.log(middle);
+                setCenter(middle.x, middle.y, middle.z);
+                */
+                mesh.position.copy(middle);
+                console.log(mesh.position)
                 await vm.scene.add(mesh);
                 await vm.renderer.render(vm.scene, vm.camera)
                 resolve(mesh.uuid);

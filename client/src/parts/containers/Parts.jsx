@@ -7,9 +7,11 @@ import { DataGrid, GridToolbar, GridToolbarContainer } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import Button from '@mui/material/Button';
+import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { withStyles } from '@material-ui/core/styles';
+import { Navigate } from 'react-router-dom';
 
 // Components
 import { Header } from '../../components';
@@ -56,6 +58,18 @@ class Parts extends Component {
         setDialogData({ "mode": "add", "title": "Add Part", "data": {} });
     }
 
+    viewFile = (id) => {
+        const { parts } = this.props
+
+        parts.result.forEach(part => {
+            if (part.id === id) {
+                const url = `/three_environment/${part.teklif_id}`;
+                window.open(url, '_blank');
+                return <Navigate to={url} target="_blank" />
+            }
+        })
+    };
+
     CustomToolbar = () => {
         const { selected } = this.state;
         const { parts } = this.props;
@@ -73,6 +87,14 @@ class Parts extends Component {
                         size="small"
                     >
                         ADD
+                    </Button>
+                    <Button
+                        startIcon={<ViewInArIcon />}
+                        onClick={() => this.viewFile(selected[0])}
+                        disabled={selected.length === 1 ? false : true}
+                        size="small"
+                    >
+                        VIEW FILE
                     </Button>
                     <Button
                         startIcon={<EditIcon />}

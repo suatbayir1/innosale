@@ -32,6 +32,7 @@ export default function SaveSettingDialog(props) {
 
     const handleSaveClick = async () => {
         await props.save()
+        setOpen(false);
     }
 
     return (

@@ -523,6 +523,8 @@ class PartOverlay extends Component {
                                                 showFileNames={true}
                                                 showFileNamesInPreview={true}
                                                 dropzoneText={"Drag and drop an file here or click"}
+
+                                                // FIXME: The following line crashes the whole front-end when there is no model_path in dialogData
                                                 initialFiles={dialogData.mode === "add" ? [] : [`${process.env.REACT_APP_BASE_SERVER_URL}${dialogData.data.model_path.split("/server")[1]}`]}
                                             />
                                         </FormControl>

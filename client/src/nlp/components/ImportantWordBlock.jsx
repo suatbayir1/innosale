@@ -21,6 +21,7 @@ class ImportantWordBlock extends Component {
                         handleInputChange = {(name, value) => {
                             this.props.handleBlockInput("importantWords", name, value)
                         }}
+                        isImportantWord={true}
                     />
                     <InputSlider
                         title = "Important Word Frequency"

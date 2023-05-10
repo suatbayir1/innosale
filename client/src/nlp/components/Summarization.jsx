@@ -12,9 +12,10 @@ import BasicTextFields from "../../components/TextField";
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import TextSnippetRoundedIcon from '@mui/icons-material/TextSnippetRounded';
 import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
+import TextField from '@mui/material/TextField';
 
 import CleaningServicesTwoToneIcon from '@mui/icons-material/CleaningServicesTwoTone';
-import { Box, Divider, Fab, Stack } from "@mui/material";
+import { Box, CircularProgress, Divider, Fab, Stack } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 
 // Components
@@ -26,7 +27,7 @@ import SaveSettingDialog from "../../components/SaveSettingDialog";
 import SettingConfirmationDialog from "../../components/SettingConfirmationDialog";
 import InputSlider from "../../components/Slider";
 // Actions
-import { setOverlay, setDialogData, saveSettings, updateSettings, getAllSettings, getSummarize, getEntities, getSetting, removeSetting } from "../../store/index";
+import { setOverlay, setDialogData, saveSettings, updateSettings, getAllSettings, getSummarize, getEntities, getSetting, removeSetting, sampleSummarize } from "../../store/index";
 import SummarizeResultDialog from "../../components/SummarizeResultDialog";
 
 
@@ -107,6 +108,10 @@ class Summarization extends Component {
         console.log(summarizeResult)
     }
 
+    timeout = (delay) => {
+        return new Promise( res => setTimeout(res, delay) );
+    }
+
     async componentDidMount() {
         // Settings Select
         const { getAllSettings, getEntities } = this.props;
@@ -120,6 +125,19 @@ class Summarization extends Component {
         await this.setSettingSelect()
 
         await this.clearScreen()
+    }
+
+    getSampleSummarize = () => {
+        const { sampleSummarize, sampleSummarizeResult } = this.props
+        const { numericFrequencyValue, normalWordsFrequencyValue, entities, importantWords } = this.state
+        sampleSummarize({
+            "path": "/root/whisper_service/static/meetings/m_01.txt",
+            "number": numericFrequencyValue,
+            "normal": normalWordsFrequencyValue,
+            "entities": entities,
+            "important_words": importantWords
+        })
+        this.setState({ sampleSummarizeResult: sampleSummarizeResult })
     }
 
     handleSliderChange = (event, newValue) => {
@@ -168,10 +186,10 @@ class Summarization extends Component {
     //////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////
 
-    setSettingSelect = async () => {
+    setSettingSelect = () => {
         //const { settingsList } = this.state;
-        const settingsList = await [];
-        const { summarizeSettings } = await this.props;
+        const settingsList = [];
+        const { summarizeSettings } = this.props;
         
 
         summarizeSettings.map((value, key) => {
@@ -359,21 +377,15 @@ class Summarization extends Component {
         else {
             if (selectedRadio == "edit") {
                 await this.props.updateSettings(payload);
-                await alert("Update setting record success!")
+                await this.setSettingSelect()
+                await alert("New setting record success!")
             }
             else if (selectedRadio == "new") {
                 await this.props.saveSettings(payload);
+                await this.setSettingSelect()
                 await alert("New setting record success!")
             }
-            
-            await window.location.reload();
-            const { getAllSettings } =await this.props;
-            await getAllSettings()
-            await this.setSettingSelect()
-            await this.clearScreen()
-            await window.location.reload();
-            window.location.reload();
-            
+            await window.location.reload()
         }
     }
 
@@ -391,37 +403,18 @@ class Summarization extends Component {
                         header = {"Warning"}
                         text = {"Are you sure you want to delete this setting completely?"}
                         confirmedFunction = { async () => {
-                            const selected = selectedSettingId.toString();
+                            //const selected = selectedSettingId.toString();
 
                             await this.props.removeSetting({
-                                '_id': selected
+                                '_id': selectedSettingId
                             })
-                            const { getAllSettings } = await this.props;
-                            this.setState({});
-                            await getAllSettings()
                             await this.setSettingSelect()
-                            this.setState({});
-
-                            const settingsList = await []
-                            await this.state.settingsList.map((value, key) => {
-                                if (value.value != selected) {
-                                    settingsList.push({
-                                        "key": key,
-                                        "value": value.value,
-                                        "text": value.text
-                                    })
-                                }
+                            const newSettingsList = this.state.settingsList
+                            newSettingsList.splice(this.state.selectedSettingIndex, 1)
+                            this.setState({
+                                settingsList: newSettingsList
                             })
-                           
-                            await this.setState({
-                                selectedSettingIndex: 0,
-                                selectedSettingName: '',
-                                selectedSettingId: '',
-                                settingsList: settingsList
-                            }, async () => {
-                                await this.clearScreen()
-                            })
-                            
+                            this.clearScreen()
                         }}
                     />
                     <SettingConfirmationDialog
@@ -466,10 +459,11 @@ class Summarization extends Component {
                             selectedRadio = {this.state.selectedRadio}
                         />
                         <SummarizeResultDialog
-                            save = {this.save}
-                            summarizeResult = {this.props.summarizeResult}
+                            timeout = {this.timeout}
+                            getSampleSummarize = {this.getSampleSummarize}
+                            summarizeResult = {this.props.sampleSummarizeResult}
                         />
-                        <div>
+                        {/*<div>
                             <Button
                                 style={{ textTransform: 'none' }}
                                 variant="contained"
@@ -479,8 +473,7 @@ class Summarization extends Component {
                             >
                                 Log State
                             </Button>
-                        </div>
-                        
+                    </div>*/}                        
                     </Stack>
 
                     <Stack spacing={10} marginBottom={5} direction='row'>
@@ -588,8 +581,8 @@ const mstp = (state) => {
         summarizeSettings: state.nlp.summarizeSettings,
         summarizeResult: state.nlp.summarizeResult,
         entityList: state.nlp.entityList,
-        insertedId: state.nlp.insertedId
-
+        insertedId: state.nlp.insertedId,
+        sampleSummarizeResult: state.nlp.sampleSummarizeResult
     }
 }
 
@@ -603,8 +596,8 @@ const mdtp = (dispatch) => {
         getEntities: () => dispatch(getEntities()),
         getSummarize: (payload) => dispatch(getSummarize(payload)),
         getSetting: (payload) => dispatch(getSetting(payload)),
-        removeSetting: (payload) => dispatch(removeSetting(payload))
-        
+        removeSetting: (payload) => dispatch(removeSetting(payload)),
+        sampleSummarize: (payload) => dispatch(sampleSummarize(payload))
     }
 }
 

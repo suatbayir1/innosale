@@ -14,6 +14,8 @@ import DownloadIcon from '@mui/icons-material/Download';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { withStyles } from '@material-ui/core/styles';
 import SummarizeIcon from '@mui/icons-material/Summarize';
+import RecordVoiceOverRoundedIcon from '@mui/icons-material/RecordVoiceOverRounded';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 
 // Components
 import { Header } from '../../components';
@@ -30,6 +32,7 @@ import withRouter from '../../shared/hoc/withRouter';
 
 // Overlays
 import DeleteConfirmationDialog from "../../shared/overlays/DeleteConfirmationDialog";
+import { CircularProgress } from '@mui/material';
 
 const styles = theme => ({
     root: {
@@ -49,6 +52,8 @@ class AudioFiles extends Component {
             selectedRow: {},
             pageSize: 5,
             selected: [],
+            isTranscribeLoading: false,
+            isSummarizeLoading: false,
         }
     }
 
@@ -70,7 +75,7 @@ class AudioFiles extends Component {
     }
 
     CustomToolbar = () => {
-        const { selected } = this.state;
+        const { selected, isTranscribeLoading, isSummarizeLoading } = this.state;
         const { audios } = this.props;
         let selectedAudio;
 
@@ -116,8 +121,16 @@ class AudioFiles extends Component {
                         </Button>
                     </Link>
                     <Button
+                        startIcon={<RecordVoiceOverRoundedIcon />}
+                        onClick={() => { this.openTranscribe() }}
+                        disabled={selected.length === 1 ? false : true}
+                        size="small"
+                    >
+                        Transcribe
+                    </Button>
+                    <Button
                         startIcon={<SummarizeIcon />}
-                        onClick={this.openSummarize}
+                        onClick={() => { this.openSummarize() }}
                         disabled={selected.length === 1 ? false : true}
                         size="small"
                     >
@@ -137,12 +150,24 @@ class AudioFiles extends Component {
         );
     }
 
-    openSummarize = () => {
-        const { selected } = this.state;
-        const { setOverlay, setDialogData } = this.props;
+    wait_for_seconds = (second) => {
+        return new Promise(resolve => setTimeout(resolve, second * 1000));
+    }
 
-        setOverlay("summarize-overlay");
-        setDialogData({ "mode": "view", "title": "Summarize", "data": {} });
+    openSummarize = async () => {
+        const { selected } = await this.state;
+        const { setOverlay, setDialogData, audios } = await this.props;
+
+        await setDialogData({ "mode": "view", "title": "Summarize", "data": audios.find(audio => {if(audio.id == selected) return audio;} )});
+        await setOverlay("summarize-overlay");
+    }
+
+    openTranscribe = async () => {
+        const { selected } = await this.state;
+        const { setOverlay, setDialogData, audios } = await this.props;
+        
+        await setDialogData({ "mode": "view", "title": "Transcribe", "data": audios.find(audio => {if(audio.id == selected) return audio;} )});
+        await setOverlay("transcribe-overlay");
     }
 
     edit = () => {
@@ -199,7 +224,7 @@ class AudioFiles extends Component {
             {
                 field: 'filename',
                 headerName: 'File Name',
-                width: 200,
+                width: 200
             },
             {
                 field: 'model',
@@ -243,6 +268,7 @@ class AudioFiles extends Component {
                         pagination
                         loading={false}
                         checkboxSelection
+                        disableMultipleSelection={true}
                         hideFooterSelectedRowCount
                         selectionModel={selected}
                         onSelectionModelChange={(selection) => {

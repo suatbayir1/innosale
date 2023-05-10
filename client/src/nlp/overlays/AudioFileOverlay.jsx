@@ -154,7 +154,7 @@ class UploadAudioFile extends Component {
                                         </DialogContentText>
                                     </Grid>
 
-                                    <Grid item xs={6} md={6}>
+                                    <Grid item xs={12} md={12} >
                                         <FormControl style={{ minWidth: "100%" }}>
                                             <TextField
                                                 label="Teklif Id"
@@ -173,24 +173,7 @@ class UploadAudioFile extends Component {
                                         </FormControl>
                                     </Grid>
 
-                                    <Grid item xs={6} md={6}>
-                                        <FormControl style={{ minWidth: "100%" }}>
-                                            <InputLabel id="model-select">Model</InputLabel>
-                                            <Select
-                                                labelId="model-select"
-                                                id="model-select"
-                                                value={model}
-                                                label="Model"
-                                                onChange={(e) => { this.setState({ model: e.target.value }) }}
-                                            >
-                                                <MenuItem value={"tiny"}>Tiny</MenuItem>
-                                                <MenuItem value={"base"}>Base</MenuItem>
-                                                <MenuItem value={"small"}>Small</MenuItem>
-                                                <MenuItem value={"medium"}>Medium</MenuItem>
-                                                <MenuItem value={"large"}>Large</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
+                                    
 
                                     <Grid item xs={12} md={12}>
 
@@ -206,8 +189,22 @@ class UploadAudioFile extends Component {
                                         showPreviewsInDropzone={false}
                                         showFileNames={true}
                                         showFileNamesInPreview={true}
+                                        maxFileSize={999999999}	
                                         dropzoneText={"Drag and drop an audio file here or click"}
+                                    /> 
+                                    /*
+                                    <DropzoneAreaBase
+                                        onChange={this.handleChange}
+                                        filesLimit={1}
+                                        showPreviews={true}
+                                        acceptedFiles={['audio/*', 'video/*']}
+                                        showPreviewsInDropzone={false}
+                                        showFileNames={true}
+                                        showFileNamesInPreview={true}
+                                        maxFileSize={999999999}	
+                                        dropzoneText={"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}
                                     />
+                                    */
                                 }
                             </DialogContent>
                             <DialogActions style={{ justifyContent: 'center' }}>

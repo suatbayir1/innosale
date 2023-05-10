@@ -6,7 +6,7 @@ import { TooltipComponent } from '@syncfusion/ej2-react-popups';
 import { NotificationContainer } from 'react-notifications';
 
 // Components
-import { Navbar, Footer, Sidebar, ThemeSettings, Summarization } from './components';
+import { Navbar, Footer, Sidebar, ThemeSettings, Summarization, ICPCalculator} from './components';
 
 // Pages && Containers
 import {
@@ -21,6 +21,10 @@ import './App.css';
 
 // Helpers
 import { useStateContext } from './contexts/ContextProvider';
+import ThreeJS from './nlp/containers/ThreeJS';
+import ThreeEnvironment from './nlp/containers/ThreeEnvironment';
+import SimilarPartFinder from './spf/containers/SimilarPartFinder';
+
 
 const App = () => {
   const { setCurrentColor, setCurrentMode, currentMode, activeMenu, currentColor, themeSettings, setThemeSettings } = useStateContext();
@@ -34,93 +38,111 @@ const App = () => {
     }
   }, []);
 
-
+  console.log(window.location.href.split("/").at(-1) )
+  console.log(window.location.href.split("/"))
   return (
     <div className={currentMode === 'Dark' ? 'dark' : ''}>
       <OverlayContainer />
       <NotificationContainer />
 
-      <BrowserRouter>
-        <div className="flex relative dark:bg-main-dark-bg">
-          <div className="fixed right-4 bottom-4" style={{ zIndex: '1000' }}>
-            <TooltipComponent
-              content="Settings"
-              position="Top"
-            >
-              <button
-                type="button"
-                onClick={() => setThemeSettings(true)}
-                style={{ background: currentColor, borderRadius: '50%' }}
-                className="text-3xl text-white p-3 hover:drop-shadow-xl hover:bg-light-gray"
+      {
+        window.location.href.split("/").at(-2) === 'three_environment' ? 
+        <BrowserRouter>
+          <Routes>
+            <Route path="/three_environment/:teklif_id" element={<ThreeEnvironment />} />
+          </Routes>
+        </BrowserRouter>
+        :
+        <BrowserRouter>
+          <div className="flex relative dark:bg-main-dark-bg">
+            <div className="fixed right-4 bottom-4" style={{ zIndex: '1000' }}>
+              <TooltipComponent
+                content="Settings"
+                position="Top"
               >
-                <FiSettings />
-              </button>
+                <button
+                  type="button"
+                  onClick={() => setThemeSettings(true)}
+                  style={{ background: currentColor, borderRadius: '50%' }}
+                  className="text-3xl text-white p-3 hover:drop-shadow-xl hover:bg-light-gray"
+                >
+                  <FiSettings />
+                </button>
 
-            </TooltipComponent>
+              </TooltipComponent>
+            </div>
+            {activeMenu ? (
+              <div className="w-72 fixed sidebar dark:bg-secondary-dark-bg bg-white ">
+                <Sidebar />
+              </div>
+            ) : (
+              <div className="w-0 dark:bg-secondary-dark-bg">
+                <Sidebar />
+              </div>
+            )}
+            <div
+              className={
+                activeMenu
+                  ? 'dark:bg-main-dark-bg  bg-main-bg min-h-screen md:ml-72 w-full  '
+                  : 'bg-main-bg dark:bg-main-dark-bg  w-full min-h-screen flex-2 '
+              }
+            >
+              <div className="fixed md:static bg-main-bg dark:bg-main-dark-bg navbar w-full ">
+                <Navbar />
+              </div>
+              <div>
+                {themeSettings && (<ThemeSettings />)}
+
+                <Routes>
+                  {/* dashboard  */}
+                  <Route path="/" element={(<Ecommerce />)} />
+                  <Route path="/ecommerce" element={(<Ecommerce />)} />
+
+                  {/* pages  */}
+                  <Route path="/orders" element={<Orders />} />
+                  <Route path="/employees" element={<Employees />} />
+                  <Route path="/customers" element={<Customers />} />
+                  <Route path="/parts" element={<Parts />} />
+                  <Route path="/part/:id" element={<PartModel />} />
+                  <Route path="/offers" element={<Offers />} />
+                  <Route path="/offer-detail/:id" element={<OfferDetail />} />
+                  <Route path="/operations" element={<Operations />} />
+
+                  {/* apps  */}
+                  <Route path="/audio-files" element={<AudioFiles />} />
+                  <Route path="/audio-files/:id" element={<AudioFiles />} />
+                  <Route path="/audio-player/:id" element={<AudioPlayer />} />
+                  <Route path="/kanban" element={<Kanban />} />
+                  <Route path="/editor" element={<Editor />} />
+                  <Route path="/calendar" element={<Calendar />} />
+                  <Route path="/color-picker" element={<ColorPicker />} />
+                  <Route path="/3D-parts" element={<PartModel />} />
+                  <Route path="/summ" element={<Summarization />} />
+                  
+                  {<Route path="/icp" element={<ICPCalculator />} />}
+                  <Route path="/threejs" element={<ThreeJS />}/>
+                  <Route path="/similar_part_finder" element={<SimilarPartFinder />}/>
+                  
+                  
+                  
+
+
+                  {/* charts  */}
+                  <Route path="/line" element={<Line />} />
+                  <Route path="/area" element={<Area />} />
+                  <Route path="/bar" element={<Bar />} />
+                  <Route path="/pie" element={<Pie />} />
+                  <Route path="/financial" element={<Financial />} />
+                  <Route path="/color-mapping" element={<ColorMapping />} />
+                  <Route path="/pyramid" element={<Pyramid />} />
+                  <Route path="/stacked" element={<Stacked />} />
+                </Routes>
+              </div>
+              <Footer />
+            </div>
           </div>
-          {activeMenu ? (
-            <div className="w-72 fixed sidebar dark:bg-secondary-dark-bg bg-white ">
-              <Sidebar />
-            </div>
-          ) : (
-            <div className="w-0 dark:bg-secondary-dark-bg">
-              <Sidebar />
-            </div>
-          )}
-          <div
-            className={
-              activeMenu
-                ? 'dark:bg-main-dark-bg  bg-main-bg min-h-screen md:ml-72 w-full  '
-                : 'bg-main-bg dark:bg-main-dark-bg  w-full min-h-screen flex-2 '
-            }
-          >
-            <div className="fixed md:static bg-main-bg dark:bg-main-dark-bg navbar w-full ">
-              <Navbar />
-            </div>
-            <div>
-              {themeSettings && (<ThemeSettings />)}
-
-              <Routes>
-                {/* dashboard  */}
-                <Route path="/" element={(<Ecommerce />)} />
-                <Route path="/ecommerce" element={(<Ecommerce />)} />
-
-                {/* pages  */}
-                <Route path="/orders" element={<Orders />} />
-                <Route path="/employees" element={<Employees />} />
-                <Route path="/customers" element={<Customers />} />
-                <Route path="/parts" element={<Parts />} />
-                <Route path="/part/:id" element={<PartModel />} />
-                <Route path="/offers" element={<Offers />} />
-                <Route path="/offer-detail/:id" element={<OfferDetail />} />
-                <Route path="/operations" element={<Operations />} />
-
-                {/* apps  */}
-                <Route path="/audio-files" element={<AudioFiles />} />
-                <Route path="/audio-files/:id" element={<AudioFiles />} />
-                <Route path="/audio-player/:id" element={<AudioPlayer />} />
-                <Route path="/kanban" element={<Kanban />} />
-                <Route path="/editor" element={<Editor />} />
-                <Route path="/calendar" element={<Calendar />} />
-                <Route path="/color-picker" element={<ColorPicker />} />
-                <Route path="/3D-parts" element={<PartModel />} />
-                <Route path="/summ" element={<Summarization />} />
-
-                {/* charts  */}
-                <Route path="/line" element={<Line />} />
-                <Route path="/area" element={<Area />} />
-                <Route path="/bar" element={<Bar />} />
-                <Route path="/pie" element={<Pie />} />
-                <Route path="/financial" element={<Financial />} />
-                <Route path="/color-mapping" element={<ColorMapping />} />
-                <Route path="/pyramid" element={<Pyramid />} />
-                <Route path="/stacked" element={<Stacked />} />
-              </Routes>
-            </div>
-            <Footer />
-          </div>
-        </div>
-      </BrowserRouter>
+        </BrowserRouter>
+      }
     </div>
   );
 };

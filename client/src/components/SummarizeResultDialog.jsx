@@ -7,11 +7,16 @@ import DialogContentText from '@mui/material/DialogContentText';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextSnippetRoundedIcon from '@mui/icons-material/TextSnippetRounded';
-import { Divider, Stack } from '@mui/material';
+import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
+
+import { CircularProgress, Divider, Stack } from '@mui/material';
+
 
 export default function SummarizeResultDialog(props) {
-    const { summarizeResult } = props
+    const { summarizeResult, getSampleSummarize } = props
     const [open, setOpen] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);    
+    const loadingText = "LOADING";
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -24,12 +29,16 @@ export default function SummarizeResultDialog(props) {
     return (
         <div>
             <Button
+                disabled={loading}
                 style={{ textTransform: 'none', height: '56px' }}
                 variant="outlined"
-                startIcon={<TextSnippetRoundedIcon />}
+                startIcon={loading ? <CircularProgress size={20} thickness={5} color={"inherit"} /> : <TextSnippetRoundedIcon />}
                 color="primary"
                 onClick={async () => {
-                    await props.save(true)
+                    setLoading(true)
+                    await getSampleSummarize()
+                    await props.timeout(3000)
+                    setLoading(false)
                     handleClickOpen()
                 }}
             >
@@ -49,18 +58,18 @@ export default function SummarizeResultDialog(props) {
                             <span><b>Sample Text</b></span>
                             <br/>
                             {
-                                summarizeResult ?
-                                summarizeResult.data.data.original :
-                                ""
+                                loading?loadingText:(summarizeResult ?
+                                summarizeResult.baseText :
+                                "")
                             }
                         </DialogContentText>
                         <DialogContentText width='25000px' textAlign={'justify'}>
                             <span><b>Summarized Text</b></span>
                             <br/>
                             {
-                                summarizeResult ?
-                                summarizeResult.data.data.result :
-                                ""
+                                loading?loadingText:(summarizeResult ?
+                                summarizeResult.summarizedText :
+                                "")
                             }
                         </DialogContentText>
                     </Stack>

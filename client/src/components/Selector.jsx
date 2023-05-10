@@ -21,6 +21,7 @@ export default function Selector (props) {
       <FormControl fullWidth>
         <InputLabel>{props.title}</InputLabel>
         <Select
+          disabled = {props.disabled}
           name = {props.name}
           label = {props.title}
           value = {value}

@@ -29,6 +29,7 @@ export default function SettingConfirmationDialog(props) {
                         color="error"
                         onClick={async () => {
                             await confirmedFunction()
+                            await setOpen(name, false)
                         }}
                     >OK</Button>   
                 </DialogActions>

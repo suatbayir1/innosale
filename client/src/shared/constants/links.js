@@ -6,8 +6,10 @@ import { BiColorFill } from 'react-icons/bi';
 import { IoMdContacts } from 'react-icons/io';
 import { RiContactsLine, RiStockLine } from 'react-icons/ri';
 import { GiLouvrePyramid } from 'react-icons/gi';
-import { GrProductHunt } from 'react-icons/gr';
+import { GrProductHunt, GrCalculator} from 'react-icons/gr';
 import { MdLocalOffer } from 'react-icons/md';
+import ViewInArRoundedIcon from '@mui/icons-material/ViewInArRounded';
+import PlagiarismIcon from '@mui/icons-material/Plagiarism';
 
 export const links = [
     {
@@ -61,6 +63,26 @@ export const links = [
                 icon: <GrProductHunt />,
                 routes: ["operations"]
             },
+            {
+                name: 'Similarity Calculator',
+                path: 'icp',
+                icon: <GrCalculator />,
+                routes: ["icp"]
+            },
+            {
+                name: 'Similar Part Finder',
+                path: 'similar_part_finder',
+                icon: <PlagiarismIcon />,
+                routes: ["similar_part_finder"]
+            },
+            
+            {
+                name: 'ThreeJS Worksheet',
+                path: 'threejs',
+                icon: <ViewInArRoundedIcon />,
+                routes: ["threejs"]
+            },
+            
         ],
     },
     {

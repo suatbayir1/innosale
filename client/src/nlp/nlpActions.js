@@ -3,7 +3,7 @@ import axios from "axios";
 import { NotificationManager } from 'react-notifications';
 
 // Types
-import { UPLOAD_AUDIO_LOADING, SET_AUDIOS, SUMMARIZE_SETTINGS, SUMMARIZE_RESULT, ENTITY_LIST, SELECTED_SETTING, INSERTED_ID } from "./nlpTypes";
+import { UPLOAD_AUDIO_LOADING, SET_AUDIOS, SUMMARIZE_SETTINGS, SUMMARIZE_RESULT, ENTITY_LIST, SELECTED_SETTING, INSERTED_ID, SAMPLE_SUMMARIZE_RESULT, TRANSCRIBE_RESULTS, QUEUE_TABLE, HASH } from "./nlpTypes";
 
 // Actions
 import { setOverlay } from "../store/index";
@@ -25,6 +25,13 @@ export const setUploadAudioLoading = (payload) => {
 export const setSummarizeSettings = (payload) => {
     return {
         type: SUMMARIZE_SETTINGS,
+        payload,
+    }
+}
+
+export const setSampleSummarize = (payload) => {
+    return {
+        type: SAMPLE_SUMMARIZE_RESULT,
         payload,
     }
 }
@@ -56,6 +63,28 @@ export const setInsertedId = (payload) => {
         payload
     }
 }
+
+export const setTransribeResults = (payload) => {
+    return {
+        type: TRANSCRIBE_RESULTS,
+        payload
+    }
+}
+
+export const setQueueTable = (payload) => {
+    return {
+        type: QUEUE_TABLE,
+        payload
+    }
+}
+
+export const setHash = (payload) => {
+    return {
+        type: HASH,
+        payload
+    }
+}
+
 // Redux Thunk
 export const getAllAudios = () => {
     return (dispatch, getState) => {
@@ -174,7 +203,7 @@ export const saveSettings = (payload) => {
             .post(url, payload)
             .then(response => {
                 console.log(response)
-                dispatch(setInsertedId(response.data.data.inserted_id))
+                dispatch(setSummarizeSettings(response.data.data))
             })
             .catch(err => {
                 console.log(err);
@@ -184,12 +213,13 @@ export const saveSettings = (payload) => {
 }
 
 export const updateSettings = (payload) => {
-    return () => {
+    return (dispatch) => {
         let url = `${process.env.REACT_APP_BASE_SERVER_URL1}/api/v1/spacy/db_update_settings`
         axios
             .post(url, payload)
             .then(response => {
                 console.log(response)
+                dispatch(setSummarizeSettings(response.data.data))
             })
             .catch(err => {
                 console.log(err);
@@ -220,7 +250,7 @@ export const getSummarize = (payload) => {
         axios
             .post(url, payload)
             .then(response => {
-                dispatch(setSummarizeResult(response))
+                dispatch(setSummarizeResult(response.data.data))
                 console.log(response)
             })
             .catch(err => {
@@ -264,15 +294,123 @@ export const getSetting = (payload) => {
 }
 
 export const removeSetting = (payload) => {
-    return () => {
+    return (dispatch) => {
         let url = `${process.env.REACT_APP_BASE_SERVER_URL1}/api/v1/spacy/db_delete_settings`
         axios
             .post(url, payload)
             .then(response => {
                 console.log(response)
+                dispatch(setSummarizeSettings(response.data.data))
             })
             .catch(err => {
                 console.log(err);
             })
     }
 }
+
+export const sampleSummarize = (payload) => {
+    return (dispatch) => {
+        let url = `${process.env.REACT_APP_BASE_SERVER_URL1}/api/v1/spacy/sample_summarize`
+        axios
+            .post(url, payload)
+            .then(response => {
+                console.log(response)
+                dispatch(setSampleSummarize(response.data.data))
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
+}
+
+export const getTransribeResults = (payload) => {
+    return (dispatch) => {
+        let url = `${process.env.REACT_APP_BASE_SERVER_URL1}/api/v1/hugging/get_transcribe_results`
+        axios
+            .post(url, payload)
+            .then(response => {
+                console.log(response.data.data)
+                dispatch(setTransribeResults(response.data.data))
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+}
+
+export const editTranscribeResult = (payload) => {
+    return (dispatch) => {
+        let url = `${process.env.REACT_APP_BASE_SERVER_URL1}/api/v1/hugging/edit_transcribe_result`
+        axios
+            .post(url, payload)
+            .then(response => {
+                console.log(response.data.data)
+                dispatch(setTransribeResults(response.data.data))
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+}
+
+export const getQueueTable = () => {
+    return (dispatch) => {
+        let url = `${process.env.REACT_APP_BASE_SERVER_URL1}/api/v1/hugging/get_queue_table`
+        axios
+            .get(url)
+            .then(response => {
+                console.log(response.data)
+                dispatch(setQueueTable(response.data.data))
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+}
+
+export const getHash = (payload) => {
+    return (dispatch) => {
+        let url = `${process.env.REACT_APP_BASE_SERVER_URL1}/api/v1/hugging/get_hash`
+        axios
+            .post(url, payload)
+            .then(response => {
+                console.log(response.data.data)
+                dispatch(setHash(response.data.data))
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+}
+
+export const addTranscribeQueue = (payload) => {
+    return (dispatch) => {
+        let url = `${process.env.REACT_APP_BASE_SERVER_URL1}/api/v1/hugging/add_to_queue`
+        axios
+            .post(url, payload)
+            .then(response => {
+                console.log(response.data.data)
+                dispatch(setQueueTable(response.data.data))
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+}
+
+export const deleteFromTranscribeQueue = (payload) => {
+    return (dispatch) => {
+        let url = `${process.env.REACT_APP_BASE_SERVER_URL1}/api/v1/hugging/delete_from_queue`
+        axios
+            .post(url, payload)
+            .then(response => {
+                console.log(response.data.data)
+                dispatch(setQueueTable(response.data.data))
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+}
+

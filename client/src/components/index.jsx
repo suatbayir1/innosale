@@ -15,6 +15,7 @@ export { default as Pie } from './Charts/Pie';
 export { default as ChartsHeader } from './ChartsHeader';
 export { default as Header } from './Header';
 export { default as Summarization } from '../nlp/components/Summarization'
+export { default as ICPCalculator } from '../icp/components/ICPCalculator'
 export { default as OfferDetailTableRow } from '../offers/components/OfferDetailTableRow';
 export { default as EmptyState } from '../shared/components/EmptyState';
 export { default as InputGroup } from '../operations/components/InputGroup';
