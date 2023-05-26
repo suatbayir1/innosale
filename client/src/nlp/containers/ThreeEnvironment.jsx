@@ -132,9 +132,9 @@ class ThreeEnvironment extends Component {
 
         this.setGuiObjectsEnabled(['Import Button', 'Export Button'], false)
         console.log(this.props.teklifIdList[this.mainGUISelected['Teklif ID']] )
-        //await getFileSpecs({ 'path': this.__path })
-        console.log(this.__path)
-        await getFileSpecs({ 'path': "/root/innosale/client/src/nlp/containers/part1-Body.2Export-Surfaces.stl" })
+        await getFileSpecs({ 'path': this.__path })
+        //console.log(this.__path)
+        //await getFileSpecs({ 'path': "/root/innosale/client/src/nlp/containers/part1-Body.2Export-Surfaces.stl" })
         
         await EnvironmentService.removeAllObjectFromSceneList(sceneList, camera, renderer)
 

@@ -12,7 +12,7 @@ import { Navbar, Footer, Sidebar, ThemeSettings, Summarization, ICPCalculator} f
 import {
   PartModel, Ecommerce, Orders, Calendar, Employees, Stacked, Pyramid,
   Customers, Kanban, Line, Area, Bar, Pie, Financial, ColorPicker,
-  ColorMapping, Editor, Parts, AudioFiles, AudioPlayer, Operations, Offers, OfferDetail
+  ColorMapping, Editor, Parts, AudioFiles, AudioPlayer, Operations, Offers, OfferDetail, CAD
 } from './pages';
 import OverlayContainer from './shared/containers/OverlayContainer';
 
@@ -24,6 +24,7 @@ import { useStateContext } from './contexts/ContextProvider';
 import ThreeJS from './nlp/containers/ThreeJS';
 import ThreeEnvironment from './nlp/containers/ThreeEnvironment';
 import SimilarPartFinder from './spf/containers/SimilarPartFinder';
+import SmallThreeEnvironment from './spf/containers/SmallThreeEnvironment';
 
 
 const App = () => {
@@ -103,6 +104,7 @@ const App = () => {
                   <Route path="/employees" element={<Employees />} />
                   <Route path="/customers" element={<Customers />} />
                   <Route path="/parts" element={<Parts />} />
+                  <Route path="/cad/:id" element={<CAD />} />
                   <Route path="/part/:id" element={<PartModel />} />
                   <Route path="/offers" element={<Offers />} />
                   <Route path="/offer-detail/:id" element={<OfferDetail />} />
@@ -122,6 +124,8 @@ const App = () => {
                   {<Route path="/icp" element={<ICPCalculator />} />}
                   <Route path="/threejs" element={<ThreeJS />}/>
                   <Route path="/similar_part_finder" element={<SimilarPartFinder />}/>
+                  <Route path="/small_three_env" element={<SmallThreeEnvironment />}/>
+                  
                   
                   
                   

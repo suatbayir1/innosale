@@ -92,5 +92,7 @@ export {
     get_teklif_ids,
     set_teklif_ids,
     get_similar_parts,
-    set_similar_parts
+    set_similar_parts,
+    get_selected_part,
+    set_selected_part
 } from "../spf/spfActions"

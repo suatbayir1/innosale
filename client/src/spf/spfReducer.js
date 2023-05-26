@@ -1,5 +1,5 @@
 // TYPES
-import { GET_PARTS, TEKLIF_ID_LIST, SIMILAR_PARTS } from "./spfTypes";
+import { GET_PARTS, TEKLIF_ID_LIST, SIMILAR_PARTS, SELECTED_PART } from "./spfTypes";
 
 const initialState = {
     parts: {},
@@ -25,6 +25,12 @@ const spfReducer = (state = initialState, action) => {
                 ...state,
                 similar_parts: action.payload
             }
+        case SELECTED_PART:
+            return {
+                ...state,
+                selected_part: action.payload
+            }
+        
         default:
             return state;
     }

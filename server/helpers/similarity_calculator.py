@@ -304,11 +304,11 @@ def table_generate2(selected_file, selection, file_list, n):
     return outputt
 
 
-file_list = fn()
+"""file_list = fn()
 #print(mahalanobis_closest_part(file_list[0], file_list, 5))
 #print(table_generate2(file_list[0], "RMSE", file_list, 5))
 print(closest_parts_both(file_list[0], "RMSE", file_list))
-
+"""
 
 
 

@@ -3,7 +3,7 @@ import axios from "axios";
 import { NotificationManager } from 'react-notifications';
 
 // Types
-import { GET_PARTS, TEKLIF_ID_LIST, SIMILAR_PARTS } from "./spfTypes";
+import { GET_PARTS, TEKLIF_ID_LIST, SIMILAR_PARTS, SELECTED_PART } from "./spfTypes";
 
 // Actions
 import { setOverlay, setOfferDetailPageLoading } from "../store";
@@ -25,6 +25,13 @@ export const set_teklif_ids = (payload) => {
 export const set_similar_parts = (payload) => {
     return {
         type: SIMILAR_PARTS,
+        payload,
+    }
+}
+
+export const set_selected_part = (payload) => {
+    return {
+        type: SELECTED_PART,
         payload,
     }
 }
@@ -53,6 +60,7 @@ export const get_teklif_ids = () => {
 
 export const get_similar_parts = (payload) => {
     return (dispatch) => {
+        dispatch(set_similar_parts([]))
         let url = `${process.env.REACT_APP_API_URL2}/similarity_icp/get_similar_parts`;
         axios
             .post(url, payload)
@@ -65,6 +73,25 @@ export const get_similar_parts = (payload) => {
             .catch(err => {
                 console.log(err)
                 dispatch(set_similar_parts([]));
+                NotificationManager.error(err.response.data.message, 'Error', 3000);
+            })
+    }
+}
+
+export const get_selected_part = (payload) => {
+    return (dispatch) => {
+        let url = `${process.env.REACT_APP_API_URL2}/similarity_icp/get_selected_part`;
+        axios
+            .post(url, payload)
+            .then(response => {
+                if (response.status === 200) {
+                    dispatch(set_selected_part(response.data.data));
+                    console.log(response)
+                }
+            })
+            .catch(err => {
+                console.log(err)
+                dispatch(set_selected_part([]));
                 NotificationManager.error(err.response.data.message, 'Error', 3000);
             })
     }

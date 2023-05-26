@@ -13,7 +13,7 @@ from controllers.PartController import PartController
 from controllers.OperationController import OperationController
 from controllers.FileController import FileController
 from controllers.OfferController import OfferController
-from controllers.SimilarityCalculatorController import SimilarityCalculatorController
+# from controllers.SimilarityCalculatorController import SimilarityCalculatorController
 # from helpers import file_converter
 # from controllers.WhisperController import WhisperController
 # from controllers.Similarity3DController import Similarity3DController

@@ -21,3 +21,4 @@ export { default as AudioPlayer } from '../nlp/containers/AudioPlayer';
 export { default as Operations } from '../operations/containers/Operations';
 export { default as Offers } from '../offers/containers/Offers';
 export { default as OfferDetail } from '../offers/containers/OfferDetail';
+export { default as CAD } from '../cad/containers/CAD';
