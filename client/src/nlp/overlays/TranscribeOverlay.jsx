@@ -52,6 +52,7 @@ class Transcribe extends Component {
         this.state = {
             pageOpen: true,
             modelSelect: '',
+            methodSelect: 'faster',
             transcribeButtonActive: false,
             transcribeResultActive: false,
 
@@ -68,6 +69,11 @@ class Transcribe extends Component {
         { 'key': 5, 'value': "large", 'text': "Large" },
         { 'key': 6, 'value': "large-v2", 'text': "Large v2" },
     ]
+
+    transcribeMethodList = [
+        { 'key': 1, 'value': 'faster', 'text': "Faster Whisper" },
+        { 'key': 2, 'value': 'jax', 'text': "WhisperJAX" }
+    ] 
     
     wait_for_seconds = (second) => {
         return new Promise(resolve => setTimeout(resolve, second * 1000));
@@ -166,7 +172,7 @@ class Transcribe extends Component {
 
     render() {
         const { setOverlay, dialogData, queueTable, currentHash, editTranscribeResult, deleteFromTranscribeQueue } = this.props
-        const { modelSelect, transcribeButtonActive, transcribeResultActive, transcribeResultText } = this.state
+        const { modelSelect, methodSelect, transcribeButtonActive, transcribeResultActive, transcribeResultText } = this.state
 
         return (
             <Dialog
@@ -196,6 +202,21 @@ class Transcribe extends Component {
                 <DialogContent dividers style={{ width: "100%" }}>
                     <FormControl style={{ width: "100%" }}>
                         <Stack spacing={3} margin={3} direction="row" style={{ width: "100%" }}>
+                        <FormControl style={{ width: 250 }}>
+                                <InputLabel>Transcribe Method</InputLabel>
+                                <Select
+                                    name="methodSelect"
+                                    value={methodSelect}
+                                    label="Transcribe Method"
+                                    onChange={this.handleChange}
+                                >
+                                    {
+                                        this.transcribeMethodList.map((item, index) => {
+                                            return <MenuItem key={index} value={item.value}>{item.text}</MenuItem>
+                                        })
+                                    }
+                                </Select>
+                            </FormControl>
                             <FormControl style={{ width: 250 }}>
                                 <InputLabel>Transcribe Model</InputLabel>
                                 <Select
@@ -222,6 +243,7 @@ class Transcribe extends Component {
 
                                     addTranscribeQueue({
                                         'model': modelSelect,
+                                        'method': methodSelect,
                                         'path': dialogData.data.path
                                     })
 
@@ -306,6 +328,7 @@ class Transcribe extends Component {
                                                         <TableCell align="center">Status</TableCell>
                                                         <TableCell align="center">Estimated Transcribe Time</TableCell>
                                                         <TableCell align="center">Estimated Wait Time</TableCell>
+                                                        <TableCell align="center">Method</TableCell>
                                                         <TableCell align="center">Model</TableCell>
                                                         <TableCell align="center">Sound Length</TableCell>
                                                         <TableCell align="center">Cancel Process</TableCell>
@@ -313,40 +336,52 @@ class Transcribe extends Component {
                                                 </TableHead>
                                                 <TableBody>
                                                     {
-                                                        queueTable.map((item) => (
-                                                        
-                                                            <TableRow
-                                                                key={item.line}
-                                                                sx = {{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                            >
-                                                                <TableCell align="center" component="th" scope="row">
-                                                                    {item.line}
-                                                                </TableCell>
-                                                                <TableCell align="center">{currentHash == item.hash ? item.status + " (you)" : item.status}</TableCell>
-                                                                <TableCell align="center">{this.sec_to_hms(item.est_transcribe_time)}</TableCell>
-                                                                <TableCell align="center">{this.sec_to_hms(item.est_wait_time)}</TableCell>
-                                                                <TableCell align="center">{item.model_name.charAt(0).toUpperCase() + item.model_name.slice(1)}</TableCell>
-                                                                <TableCell align="center">{this.sec_to_hms(item.sound_len)}</TableCell>
-                                                                <TableCell align="center">
-                                                                    <IconButton
-                                                                        aria-label="delete"
-                                                                        color={"error"}
-                                                                        disabled={item.status === "in_process" || currentHash != item.hash ? true : false}
-                                                                        onClick={() => {
-                                                                            deleteFromTranscribeQueue({
-                                                                                'hash': item.hash,
-                                                                                'model_name': item.model_name,
-                                                                                'status': item.status  
-                                                                            })
-                                                                        }}
-                                                                    >
-                                                                        <DeleteIcon />
-                                                                    </IconButton>
-                                                                </TableCell>
-                                                                
-                                                            </TableRow>
-                                                        ))
-                                                    }
+                                                                    queueTable.map((item) => {
+                                                                        let methodname = ""
+                                                                        if(item.method_name === "faster"){
+                                                                            methodname = "Faster Whisper"
+                                                                        }else if(item.method_name === "jax"){
+                                                                            methodname = "WhisperJAX"
+                                                                        }
+
+                                                                        return (
+                                                                            <TableRow
+                                                                                key={item.line}
+                                                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                                            >
+                                                                                <TableCell align="center" component="th" scope="row">
+                                                                                    {item.line}
+                                                                                </TableCell>
+                                                                                <TableCell align="center">{currentHash == item.hash ? item.status + " (you)" : item.status}</TableCell>
+                                                                                <TableCell align="center">{this.sec_to_hms(item.est_transcribe_time)}</TableCell>
+                                                                                <TableCell align="center">{this.sec_to_hms(item.est_wait_time)}</TableCell>
+                                                                                <TableCell align="center">{methodname}</TableCell>
+                                                                                <TableCell align="center">{item.model_name.charAt(0).toUpperCase() + item.model_name.slice(1)}</TableCell>
+                                                                                <TableCell align="center">{this.sec_to_hms(item.sound_len)}</TableCell>
+                                                                                <TableCell align="center">
+                                                                                    <IconButton
+                                                                                        aria-label="delete"
+                                                                                        color={"error"}
+                                                                                        disabled={item.status === "in_process" || currentHash != item.hash ? true : false}
+                                                                                        onClick={() => {
+                                                                                            deleteFromTranscribeQueue({
+                                                                                                'hash': item.hash,
+                                                                                                'model_name': item.model_name,
+                                                                                                'status': item.status
+                                                                                            })
+                                                                                        }}
+                                                                                    >
+                                                                                        <DeleteIcon />
+                                                                                    </IconButton>
+                                                                                </TableCell>
+
+                                                                            </TableRow>
+
+                                                                        )
+                                                                    }
+
+                                                                    )
+                                                                }
                                                 </TableBody>
                                             </Table>
                                         </TableContainer>

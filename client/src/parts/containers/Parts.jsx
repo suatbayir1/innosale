@@ -6,6 +6,8 @@ import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar, GridToolbarContainer } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import PlagiarismIcon from '@mui/icons-material/Plagiarism';
+
 import Button from "@mui/material/Button";
 import ViewInArIcon from "@mui/icons-material/ViewInAr";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
@@ -70,12 +72,37 @@ class Parts extends Component {
 
     parts.result.forEach((part) => {
       if (part.id === id) {
-        const url = `/three_environment/${part.teklif_id}`;
+        const url = `/threejs_v2_scene/${part.teklif_id}`;
         window.open(url, "_blank");
         return <Navigate to={url} target="_blank" />;
       }
     });
   };
+  
+  viewFileV2 = (id) => {
+    const { parts } = this.props;
+
+    parts.result.forEach((part) => {
+      if (part.id === id) {
+        const url = `/threejs_scene/${part.teklif_id}`;
+        window.open(url, "_blank");
+        return <Navigate to={url} target="_blank" />;
+      }
+    });
+  };
+  
+  similarFinder = (id) => {
+    const { parts } = this.props;
+
+    parts.result.forEach((part) => {
+      if (part.id === id) {
+        const url = `/similar_part_finder/${part.teklif_id}`;
+        window.open(url, "_blank");
+        return <Navigate to={url} target="_blank" />;
+      }
+    });
+  };
+  
 
   CustomToolbar = () => {
     const { selected } = this.state;
@@ -101,6 +128,23 @@ class Parts extends Component {
           >
             VIEW FILE
           </Button>
+          {/*<Button
+            startIcon={<ViewInArIcon />}
+            onClick={() => this.viewFileV2(selected[0])}
+            disabled={selected.length === 1 ? false : true}
+            size="small"
+          >
+            VIEW FILE V2
+          </Button> */}
+          <Button
+            startIcon={<PlagiarismIcon />}
+            onClick={() => this.similarFinder(selected[0])}
+            disabled={selected.length === 1 ? false : true}
+            size="small"
+          >
+            SIMILAR PART FINDER
+          </Button>
+          
           <Button
             startIcon={<EditIcon />}
             onClick={this.edit}

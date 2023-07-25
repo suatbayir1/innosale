@@ -10,6 +10,7 @@ import { GrProductHunt, GrCalculator} from 'react-icons/gr';
 import { MdLocalOffer } from 'react-icons/md';
 import ViewInArRoundedIcon from '@mui/icons-material/ViewInArRounded';
 import PlagiarismIcon from '@mui/icons-material/Plagiarism';
+import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
 
 export const links = [
     {
@@ -46,6 +47,12 @@ export const links = [
                 icon: <RiContactsLine />,
             },
             {
+                name: 'System Logs',
+                path: 'system_logs',
+                routes: ["system_logs"],
+                icon: <DocumentScannerIcon />,
+            },
+            {
                 name: 'Offers',
                 path: 'offers',
                 icon: <MdLocalOffer />,
@@ -71,7 +78,7 @@ export const links = [
             },
             {
                 name: 'Similar Part Finder',
-                path: 'similar_part_finder',
+                path: 'similar_part_finder/5',
                 icon: <PlagiarismIcon />,
                 routes: ["similar_part_finder"]
             },

@@ -11,7 +11,7 @@ import { Navbar, Footer, Sidebar, ThemeSettings, Summarization, ICPCalculator} f
 // Pages && Containers
 import {
   PartModel, Ecommerce, Orders, Calendar, Employees, Stacked, Pyramid,
-  Customers, Kanban, Line, Area, Bar, Pie, Financial, ColorPicker,
+  Customers, Kanban, Line, Area, Bar, Pie, Financial, ColorPicker, SimilarPartFinder,
   ColorMapping, Editor, Parts, AudioFiles, AudioPlayer, Operations, Offers, OfferDetail, CAD
 } from './pages';
 import OverlayContainer from './shared/containers/OverlayContainer';
@@ -23,8 +23,12 @@ import './App.css';
 import { useStateContext } from './contexts/ContextProvider';
 import ThreeJS from './nlp/containers/ThreeJS';
 import ThreeEnvironment from './nlp/containers/ThreeEnvironment';
-import SimilarPartFinder from './spf/containers/SimilarPartFinder';
 import SmallThreeEnvironment from './spf/containers/SmallThreeEnvironment';
+import ThreeJSScene from './threejs/containers/ThreeJSScene';
+import ThreeJSv2 from './threejs_v2/containers/ThreeJSv2';
+import SystemLogs from './system_logs/containers/SystemLogs';
+import ThreeJSv3 from './threejs_v3/containers/ThreeJSv3';
+import LoginPage from './login/containers/LoginPage';
 
 
 const App = () => {
@@ -54,6 +58,35 @@ const App = () => {
           </Routes>
         </BrowserRouter>
         :
+        window.location.href.split("/").at(-2) === 'threejs_scene' ? 
+        <BrowserRouter>
+          <Routes>
+            <Route path="/threejs_scene/:teklif_id" element={<ThreeJSScene />} />
+          </Routes>
+        </BrowserRouter>
+        :
+        window.location.href.split("/").at(-2) === 'threejs_v2_scene' ? 
+        <BrowserRouter>
+          <Routes>
+            <Route path="/threejs_v2_scene/:teklif_id" element={<ThreeJSv2 />} />
+          </Routes>
+        </BrowserRouter>
+        :
+        window.location.href.split("/").at(-2) === 'threejs_v3_scene' ? 
+        <BrowserRouter>
+          <Routes>
+            <Route path="/threejs_v3_scene/:teklif_id" element={<ThreeJSv3 />} />
+          </Routes>
+        </BrowserRouter>
+        :
+        window.location.href.split("/").at(-1) === 'login' ? 
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />            
+          </Routes>
+        </BrowserRouter>
+        :
+        
         <BrowserRouter>
           <div className="flex relative dark:bg-main-dark-bg">
             <div className="fixed right-4 bottom-4" style={{ zIndex: '1000' }}>
@@ -104,6 +137,7 @@ const App = () => {
                   <Route path="/employees" element={<Employees />} />
                   <Route path="/customers" element={<Customers />} />
                   <Route path="/parts" element={<Parts />} />
+                  <Route path="/system_logs" element={<SystemLogs />} />
                   <Route path="/cad/:id" element={<CAD />} />
                   <Route path="/part/:id" element={<PartModel />} />
                   <Route path="/offers" element={<Offers />} />
@@ -123,7 +157,7 @@ const App = () => {
                   
                   {<Route path="/icp" element={<ICPCalculator />} />}
                   <Route path="/threejs" element={<ThreeJS />}/>
-                  <Route path="/similar_part_finder" element={<SimilarPartFinder />}/>
+                  <Route path="/similar_part_finder/:teklif_id" element={<SimilarPartFinder />}/>
                   <Route path="/small_three_env" element={<SmallThreeEnvironment />}/>
                   
                   

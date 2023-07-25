@@ -1,6 +1,7 @@
 // Libraries
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import withRouter from "../../shared/hoc/withRouter"
 
 // Components
 import { Header } from '../../components';
@@ -30,7 +31,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 class SimilarPartFinder extends Component {
     constructor(props) {
-        super(props);
+        super(props)
 
         this.state = {
             part_container: document.getElementById("part_container"),
@@ -99,6 +100,7 @@ class SimilarPartFinder extends Component {
 
     async componentDidMount() {
         const { get_teklif_ids } = await this.props
+
         await get_teklif_ids()
         await this.wait_for_seconds(1)
         await this.setState({
@@ -124,6 +126,22 @@ class SimilarPartFinder extends Component {
         })
         this.similar_part_scene.animate()
         this.part_scene.animate()
+        while (true) {
+            if (this.props.teklif_ids) {
+                Object.keys(this.props.teklif_ids).forEach(key => {
+                    if (key === this.props.params.teklif_id) {
+                        this.setState({
+                            selector_part: this.props.teklif_ids[key]
+                        }, this.load_selected_part)
+                        return
+                    }
+                })
+                break
+            }
+            else {
+                await this.wait_for_seconds(0.5)
+            }
+        }
     }
 
     calculate_similar_parts = async () => {
@@ -194,11 +212,11 @@ class SimilarPartFinder extends Component {
         await get_selected_part({ 'selected_file': part_id })
         const startState = { rows: [], selector_part_disabled: true, part_loaded: false, overlay_button_disabled: true, load_button_disabled: true, load_button_loading: true, calculate_button_disabled: true, calculate_button_loading: false }
         const endState = { selector_part_disabled: false, load_button_disabled: false, part_loaded: true, load_button_loading: false, calculate_button_disabled: false,
-            part_sac_kalinligi: this.props.selected_part.sac_kalinligi,
-            part_net_x: this.props.selected_part.net_x,
-            part_net_y: this.props.selected_part.net_y,
-            part_kontur: this.props.selected_part.kontur,
-            part_yuzey_alani: this.props.selected_part.yuzey_alani
+            part_sac_kalinligi: this.props.selected_part ? this.props.selected_part.sac_kalinligi ? this.props.selected_part.sac_kalinligi : "" : "",
+            part_net_x: this.props.selected_part ? this.props.selected_part.net_x ? this.props.selected_part.net_x : "" : "",
+            part_net_y: this.props.selected_part ? this.props.selected_part.net_y ? this.props.selected_part.net_y : "" : "",
+            part_kontur: this.props.selected_part ? this.props.selected_part.kontur ? this.props.selected_part.kontur : "" : "",
+            part_yuzey_alani: this.props.selected_part ? this.props.selected_part.yuzey_alani ? this.props.selected_part.yuzey_alani : "" : ""
         }
 
         ThreeScene_.removeAllObjectFromSceneList(this.part_scene.scene, this.part_scene.camera, this.part_scene.renderer)
@@ -311,12 +329,13 @@ class SimilarPartFinder extends Component {
                 }))
             }
         }
-        else if (event.target.name.startsWith("selector"))
+        else if (event.target.name.startsWith("selector")) {
             this.setState({ [event.target.name]: event.target.value },
                 () => this.setState({ calculate_button_disabled: this.isButtonDisabled()},
-                    () => this.load_selected_part()          
+                    () => { if (event.target.name !== "selector_geometry_option") this.load_selected_part() }
                 )
             )
+        }
         
         else {
             this.setState({ [event.target.name]: event.target.value }, () => this.setState({
@@ -460,7 +479,7 @@ class SimilarPartFinder extends Component {
                                         disabled = {selector_part_disabled}
                                         value = {selector_part}
                                         setValue = {this.handleChange}
-                                        items = {Object.keys(this.props.teklif_ids).map(
+                                        items = {this.props.teklif_ids ? Object.keys(this.props.teklif_ids).map(
                                             key => {
                                                 return {
                                                     "key": key,
@@ -468,7 +487,7 @@ class SimilarPartFinder extends Component {
                                                     "text": key
                                                 }
                                             }
-                                        )}
+                                        ) : []}
                                     />
                                 </Stack>                             
                                 <Stack marginRight={2}>
@@ -617,4 +636,4 @@ const mdtp = (dispatch) => {
     }
 }
 
-export default connect(mstp, mdtp)(SimilarPartFinder);
+export default withRouter(connect(mstp, mdtp)(SimilarPartFinder));

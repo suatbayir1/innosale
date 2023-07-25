@@ -145,6 +145,8 @@ export const getFileSpecs = (payload) => {
 
 export const getFileList = () => {
     return (dispatch) => {
+        dispatch(setFileList([]));
+        
         let url = `${process.env.REACT_APP_API_URL2}/three/get_file_list`;
         axios
             .get(url)
